@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zouhir OUARAB — Effets Lumineux Guitariste</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root { --black: #050505; --white: #f5f2ee; --accent: #c8a96e; }
+
+  body {
+    background: var(--black); color: var(--white);
+    font-family: 'Space Mono', monospace; min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center;
+  }
+
+  header {
+    width: 100%; padding: 1.5rem 2rem;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  a.btn-back {
+    color: var(--accent); text-decoration: none; border: 1px solid var(--accent);
+    padding: .5rem 1.2rem; font-size: .75rem; text-transform: uppercase;
+    letter-spacing: .12em; transition: .3s;
+  }
+  a.btn-back:hover { background: var(--accent); color: var(--black); }
+  .page-title {
+    font-family: 'Bebas Neue', sans-serif; letter-spacing: .1em;
+    font-size: 1.1rem; color: var(--accent); text-align: center;
+  }
+
+  .main-wrap {
+    width: 95%; max-width: 900px; padding: 1rem 0 3rem;
+    display: flex; flex-direction: column; align-items: center; gap: 2rem;
+  }
+
+  /* ── GUITAR NECK ── */
+  .guitar-section {
+    width: 100%; background: #0a0a0a; border: 1px solid #222;
+    border-radius: 8px; padding: 2rem; position: relative; overflow: hidden;
+  }
+  .guitar-section::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, rgba(255,255,255,.02) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .neck-label {
+    font-size: .55rem; color: rgba(255,255,255,.3); letter-spacing:.15em;
+    text-transform: uppercase; margin-bottom: 1rem;
+  }
+
+  .guitar-neck {
+    background: linear-gradient(180deg, #1a1208 0%, #2a1c0e 100%);
+    border: 1px solid #3a2a1a; border-radius: 4px; padding: 8px 12px;
+    display: flex; gap: 3px; justify-content: center; flex-wrap: wrap;
+    position: relative; box-shadow: inset 0 0 20px rgba(0,0,0,.6);
+  }
+  /* Frets */
+  .guitar-neck::before {
+    content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 1px;
+    background: rgba(200,169,110,.1);
+  }
+  /* Strings simulation */
+  .strings {
+    position: absolute; top: 0; bottom: 0; left: 0; right: 0;
+    display: flex; justify-content: space-evenly; pointer-events: none;
+  }
+  .string {
+    width: 1px; background: linear-gradient(180deg, rgba(200,200,200,.1), rgba(200,200,200,.05));
+  }
+
+  .led {
+    width: 12px; height: 24px; background: #111; border-radius: 2px;
+    transition: background 0.06s, box-shadow 0.06s;
+    position: relative; z-index: 1;
+  }
+
+  /* ── CONTROLS ── */
+  .controls {
+    display: flex; gap: .8rem; justify-content: center; flex-wrap: wrap;
+  }
+  .mode-btn {
+    background: transparent; border: 1px solid #333; color: #888;
+    padding: .7rem 1.2rem; font-family: 'Space Mono', monospace;
+    font-size: .7rem; cursor: pointer; text-transform: uppercase;
+    letter-spacing: .1em; transition: .3s; border-radius: 3px;
+  }
+  .mode-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .mode-btn.active { background: var(--accent); color: var(--black); border-color: var(--accent); }
+
+  /* ── VISUALIZER ── */
+  .viz-box {
+    width: 100%; height: 100px; background: #0a0a0a;
+    border: 1px solid #222; border-radius: 6px; overflow: hidden; position: relative;
+  }
+  .viz-box canvas { display: block; width: 100%; height: 100%; }
+  .viz-label {
+    position: absolute; top: 6px; left: 8px;
+    font-size: .5rem; color: rgba(255,255,255,.25); letter-spacing:.12em; text-transform: uppercase;
+  }
+
+  .panel {
+    background: rgba(255,255,255,.03); border: 1px solid rgba(200,169,110,.15);
+    border-radius: 8px; padding: 1.5rem; backdrop-filter: blur(8px);
+    width: 100%;
+  }
+  .panel h2 {
+    font-family: 'Bebas Neue', sans-serif; color: var(--accent);
+    font-size: 1.3rem; letter-spacing: .06em; margin-bottom: .6rem;
+  }
+  .panel p { color: #999; font-size: .82rem; line-height: 1.6; }
+
+  .tech-tag {
+    display: inline-block; padding: .25rem .6rem; margin: .15rem;
+    border: 1px solid #333; border-radius: 3px; font-size: .6rem;
+    color: var(--accent); letter-spacing: .08em;
+  }
+  .desc-section { margin-top: 1rem; }
+  .desc-section h3 {
+    font-family: 'Bebas Neue', sans-serif; font-size: 1rem;
+    color: var(--white); letter-spacing: .06em; margin-bottom: .4rem;
+  }
+
+  .music-info {
+    text-align: center; font-size: .7rem; color: #555; margin-top: .5rem;
+    letter-spacing: .1em;
+  }
+  .music-info span { color: var(--accent); }
+
+  .analogy-card {
+    margin-top: 1rem; padding: 1rem; border-radius: 6px;
+    background: linear-gradient(135deg, rgba(200,169,110,.1) 0%, rgba(0,0,0,.5) 100%);
+    border: 1px dashed rgba(200,169,110,.4);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; height: 140px; position: relative; overflow: hidden;
+  }
+  .analogy-title {
+    font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; color: var(--accent);
+    letter-spacing: .08em; z-index: 2; margin-bottom: .5rem;
+  }
+  .analogy-desc {
+    font-family: 'Space Mono', monospace; font-size: .65rem; color: #aaa;
+    max-width: 90%; z-index: 2;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="btn-back">← Retour au CV</a>
+  <span class="page-title">EFFETS LUMINEUX — MICROCONTRÔLEUR / LED WS2812B</span>
+  <div style="width:120px"></div>
+</header>
+
+<div class="main-wrap">
+
+  <!-- GUITAR NECK WITH LEDS -->
+  <div class="guitar-section">
+    <div class="neck-label">Bandeau LED WS2812B — 50 LEDs — Simulation Temps Réel</div>
+    <div class="guitar-neck" id="led-strip">
+      <div class="strings">
+        <div class="string"></div><div class="string"></div><div class="string"></div>
+        <div class="string"></div><div class="string"></div><div class="string"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUDIO VISUALIZER -->
+  <div class="viz-box">
+    <span class="viz-label">Analyse Fréquentielle (Simulée)</span>
+    <canvas id="vizCanvas" width="900" height="100"></canvas>
+  </div>
+  <div class="music-info">🎵 <span id="track-name">Initialisation audio...</span></div>
+
+  <!-- MODE BUTTONS -->
+  <div class="controls">
+    <button class="mode-btn active" data-mode="vu">VU-Mètre</button>
+    <button class="mode-btn" data-mode="wave">Onde Arc-en-ciel</button>
+    <button class="mode-btn" data-mode="strobe">Stroboscope</button>
+    <button class="mode-btn" data-mode="chase">Chase</button>
+    <button class="mode-btn" data-mode="fire">Feu</button>
+  </div>
+
+  <!-- DETAILS -->
+  <div class="panel">
+    <h2>Détails du Projet</h2>
+    <p>Rétro-ingénierie d'un bandeau LED commercial et reprogrammation complète en C sur microcontrôleur. Le système offre 5+ modes d'éclairage synchronisés avec l'analyse audio en temps réel.</p>
+    <div class="desc-section">
+      <h3>Technologies</h3>
+      <span class="tech-tag">ATmega328P</span>
+      <span class="tech-tag">C / AVR</span>
+      <span class="tech-tag">WS2812B</span>
+      <span class="tech-tag">FFT Audio</span>
+      <span class="tech-tag">PWM</span>
+      <span class="tech-tag">SPI</span>
+    </div>
+    <div class="desc-section" style="margin-top:1rem;">
+      <h3>Utilité dans la vie réelle</h3>
+      <p>Les bandeaux LED programmables sont omniprésents : concerts et spectacles vivants, éclairage architectural, signalisation automobile, décoration intérieure intelligente. Ce projet démontre la maîtrise de la communication série rapide et du traitement de signal en temps réel sur systèmes contraints.</p>
+
+      <div class="analogy-card" style="padding:0; border:none; background:transparent; height:auto;">
+        <h4 style="font-family:'Bebas Neue',sans-serif; color:var(--accent); font-size:1.1rem; margin-bottom:0.5rem; letter-spacing:0.08em; text-align:center;">🎸 ANALOGIE : ÉCLAIRAGE SCÉNIQUE DMX</h4>
+        <p style="font-size:0.75rem; color:#aaa; text-align:center; margin-bottom:1rem;">Concert et Régie Lumière</p>
+        <img src="analogie-dmx.jpg" alt="DMX Concert Stage Lighting" style="width:100%; border-radius:6px; border:1px solid #333;">
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── LED STRIP ──
+const strip = document.getElementById('led-strip');
+const NUM_LEDS = 50;
+const leds = [];
+for (let i = 0; i < NUM_LEDS; i++) {
+  const d = document.createElement('div');
+  d.className = 'led';
+  strip.appendChild(d);
+  leds.push(d);
+}
+
+// ── MODE MANAGEMENT ──
+let mode = 'vu';
+document.querySelectorAll('.mode-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    mode = btn.dataset.mode;
+  });
+});
+
+// ── AUDIO CONTEXT (real sound!) ──
+let audioCtx, analyser, dataArray, source, audioStarted = false;
+
+async function initAudio() {
+  if (audioStarted) return;
+  audioStarted = true;
+
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  analyser = audioCtx.createAnalyser();
+  analyser.fftSize = 128;
+  dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+  // Create a driving beat using oscillators
+  function createBeat() {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+
+    // Bass kick pattern
+    const now = audioCtx.currentTime;
+    const bpm = 120;
+    const beatInterval = 60 / bpm;
+
+    function scheduleKick(time) {
+      const kickOsc = audioCtx.createOscillator();
+      const kickGain = audioCtx.createGain();
+      kickOsc.type = 'sine';
+      kickOsc.frequency.setValueAtTime(150, time);
+      kickOsc.frequency.exponentialRampToValueAtTime(30, time + 0.15);
+      kickGain.gain.setValueAtTime(0.5, time);
+      kickGain.gain.exponentialRampToValueAtTime(0.001, time + 0.2);
+      kickOsc.connect(kickGain);
+      kickGain.connect(analyser);
+      kickGain.connect(audioCtx.destination);
+      kickOsc.start(time);
+      kickOsc.stop(time + 0.25);
+    }
+
+    function scheduleHiHat(time) {
+      const bufferSize = audioCtx.sampleRate * 0.05;
+      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * 0.15;
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = buffer;
+      const noiseGain = audioCtx.createGain();
+      noiseGain.gain.setValueAtTime(0.12, time);
+      noiseGain.gain.exponentialRampToValueAtTime(0.001, time + 0.05);
+      // Bandpass
+      const bp = audioCtx.createBiquadFilter();
+      bp.type = 'bandpass'; bp.frequency.value = 8000; bp.Q.value = 1;
+      noise.connect(bp); bp.connect(noiseGain);
+      noiseGain.connect(analyser);
+      noiseGain.connect(audioCtx.destination);
+      noise.start(time);
+    }
+
+    function scheduleSynth(time) {
+      const notes = [220, 277, 330, 277, 220, 330, 277, 220];
+      const noteIdx = Math.floor((time / beatInterval) % notes.length);
+      const synthOsc = audioCtx.createOscillator();
+      const synthGain = audioCtx.createGain();
+      synthOsc.type = 'sawtooth';
+      synthOsc.frequency.value = notes[noteIdx];
+      synthGain.gain.setValueAtTime(0.08, time);
+      synthGain.gain.exponentialRampToValueAtTime(0.001, time + beatInterval * 0.8);
+      // Low pass for warmth
+      const lp = audioCtx.createBiquadFilter();
+      lp.type = 'lowpass'; lp.frequency.value = 1200;
+      synthOsc.connect(lp); lp.connect(synthGain);
+      synthGain.connect(analyser);
+      synthGain.connect(audioCtx.destination);
+      synthOsc.start(time);
+      synthOsc.stop(time + beatInterval);
+    }
+
+    // Schedule 4 bars worth of beats ahead
+    function scheduleBars() {
+      const lookAhead = 16 * beatInterval;
+      const startTime = audioCtx.currentTime + 0.1;
+      for (let beat = 0; beat < 16; beat++) {
+        let t = startTime + beat * beatInterval;
+        // Kick on beats 0, 2 (within each bar of 4)
+        if (beat % 4 === 0 || beat % 4 === 2) scheduleKick(t);
+        // Hi-hat on every beat
+        scheduleHiHat(t);
+        // Synth on every beat
+        if (beat % 2 === 0) scheduleSynth(t);
+      }
+      // Reschedule before the current batch ends
+      setTimeout(scheduleBars, lookAhead * 900);
+    }
+
+    scheduleBars();
+  }
+
+  createBeat();
+  document.getElementById('track-name').textContent = 'Synthétiseur Dynamique — 120 BPM';
+}
+
+// Start audio on first user interaction
+document.addEventListener('click', () => { initAudio(); }, { once: false });
+
+// ── VISUALIZER ──
+const vizC = document.getElementById('vizCanvas');
+const vCtx = vizC.getContext('2d');
+
+// ── ANIMATION LOOP ──
+let t = 0;
+let chasePos = 0;
+let strobeOn = true;
+let strobeCounter = 0;
+
+function getAudioLevel() {
+  if (!analyser) return Array(64).fill(Math.sin(t * 5) * 60 + 80);
+  analyser.getByteFrequencyData(dataArray);
+  return Array.from(dataArray);
+}
+
+function animate() {
+  t += 0.05;
+  const freqData = getAudioLevel();
+
+  // Sum up audio energy
+  let totalEnergy = freqData.reduce((a, b) => a + b, 0) / freqData.length / 255;
+  let bassEnergy = freqData.slice(0, 8).reduce((a, b) => a + b, 0) / 8 / 255;
+
+  // ── LED MODES ──
+  if (mode === 'vu') {
+    let level = Math.floor(totalEnergy * NUM_LEDS * 1.8);
+    for (let i = 0; i < NUM_LEDS; i++) {
+      if (i < level) {
+        let pct = i / NUM_LEDS;
+        let hue = 120 - pct * 120; // Green → Red
+        let light = 45 + pct * 15;
+        leds[i].style.background = `hsl(${hue}, 100%, ${light}%)`;
+        leds[i].style.boxShadow = `0 0 ${8 + pct * 8}px hsl(${hue}, 100%, ${light}%)`;
+      } else {
+        leds[i].style.background = '#111';
+        leds[i].style.boxShadow = 'none';
+      }
+    }
+  }
+  else if (mode === 'wave') {
+    for (let i = 0; i < NUM_LEDS; i++) {
+      let hue = (i * 8 + t * 80) % 360;
+      let brightness = 30 + Math.sin(i * 0.15 + t * 3) * 20 + totalEnergy * 30;
+      leds[i].style.background = `hsl(${hue}, 100%, ${brightness}%)`;
+      leds[i].style.boxShadow = `0 0 ${10 + brightness / 4}px hsl(${hue}, 100%, ${brightness}%)`;
+    }
+  }
+  else if (mode === 'strobe') {
+    strobeCounter++;
+    if (strobeCounter % Math.max(2, Math.round(8 - bassEnergy * 10)) === 0) strobeOn = !strobeOn;
+    for (let i = 0; i < NUM_LEDS; i++) {
+      if (strobeOn) {
+        leds[i].style.background = '#fff';
+        leds[i].style.boxShadow = '0 0 20px #fff';
+      } else {
+        leds[i].style.background = '#111';
+        leds[i].style.boxShadow = 'none';
+      }
+    }
+  }
+  else if (mode === 'chase') {
+    chasePos += 0.3 + bassEnergy * 0.8;
+    for (let i = 0; i < NUM_LEDS; i++) {
+      let dist = Math.abs(((i + chasePos) % NUM_LEDS) - NUM_LEDS / 2);
+      let brightness = Math.max(0, 55 - dist * 4);
+      let hue = (t * 40 + i * 5) % 360;
+      if (brightness > 5) {
+        leds[i].style.background = `hsl(${hue}, 100%, ${brightness}%)`;
+        leds[i].style.boxShadow = `0 0 ${brightness / 3}px hsl(${hue}, 100%, ${brightness}%)`;
+      } else {
+        leds[i].style.background = '#111';
+        leds[i].style.boxShadow = 'none';
+      }
+    }
+  }
+  else if (mode === 'fire') {
+    for (let i = 0; i < NUM_LEDS; i++) {
+      let flicker = Math.random() * 40 + bassEnergy * 60;
+      let hue = 10 + Math.random() * 25;
+      let light = 10 + flicker;
+      leds[i].style.background = `hsl(${hue}, 100%, ${light}%)`;
+      leds[i].style.boxShadow = `0 0 ${flicker / 3}px hsl(${hue}, 100%, ${light}%)`;
+    }
+  }
+
+  // ── DRAW FREQUENCY VISUALIZER ──
+  vCtx.clearRect(0, 0, vizC.width, vizC.height);
+  let barW = vizC.width / freqData.length;
+  for (let i = 0; i < freqData.length; i++) {
+    let h = (freqData[i] / 255) * vizC.height * 0.9;
+    let hue = (i / freqData.length) * 280;
+    vCtx.fillStyle = `hsla(${hue}, 80%, 50%, 0.7)`;
+    vCtx.fillRect(i * barW, vizC.height - h, barW - 1, h);
+  }
+
+  requestAnimationFrame(animate);
+}
+
+animate();
+</script>
+</body>
+</html>

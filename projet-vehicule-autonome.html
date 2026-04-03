@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zouhir OUARAB — Véhicule Autonome</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root { --black: #050505; --white: #f5f2ee; --accent: #c8a96e; --danger: #e74c3c; --safe: #2ecc71; --warn: #e67e22; }
+
+  body {
+    background: var(--black); color: var(--white);
+    font-family: 'Space Mono', monospace; min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center;
+  }
+
+  header {
+    width: 100%; padding: 1.5rem 2rem;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  a.btn-back {
+    color: var(--accent); text-decoration: none; border: 1px solid var(--accent);
+    padding: .5rem 1.2rem; font-size: .75rem; text-transform: uppercase;
+    letter-spacing: .12em; transition: .3s;
+  }
+  a.btn-back:hover { background: var(--accent); color: var(--black); }
+  .page-title {
+    font-family: 'Bebas Neue', sans-serif; letter-spacing: .1em;
+    font-size: 1.1rem; color: var(--accent); text-align: center;
+  }
+
+  /* ── MAIN LAYOUT ── */
+  .main-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+    width: 95%; max-width: 1200px; padding: 1rem 0 3rem;
+  }
+  @media (max-width: 900px) { .main-grid { grid-template-columns: 1fr; } }
+
+  .panel {
+    background: rgba(255,255,255,.03); border: 1px solid rgba(200,169,110,.15);
+    border-radius: 8px; padding: 1.5rem; backdrop-filter: blur(8px);
+  }
+  .panel h2 {
+    font-family: 'Bebas Neue', sans-serif; color: var(--accent);
+    font-size: 1.3rem; letter-spacing: .06em; margin-bottom: .8rem;
+  }
+  .panel p { color: #999; font-size: .82rem; line-height: 1.6; }
+
+  /* ── CANVAS PANELS ── */
+  .canvas-box {
+    position: relative; border: 1px solid #222; border-radius: 6px;
+    overflow: hidden; background: #0a0a0a;
+  }
+  .canvas-box canvas { display: block; width: 100%; height: auto; }
+  .canvas-label {
+    position: absolute; top: 8px; left: 10px;
+    font-size: .55rem; color: rgba(255,255,255,.35); letter-spacing: .12em; text-transform: uppercase;
+  }
+
+  /* ── TELEMETRY ── */
+  .tele-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: .7rem 0; border-bottom: 1px solid #1a1a1a; font-size: .8rem;
+  }
+  .tele-row:last-child { border: none; }
+  .tele-val { color: var(--accent); font-weight: 700; }
+
+  .indicator {
+    display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+    margin-right: 6px; vertical-align: middle;
+  }
+  .ind-safe { background: var(--safe); box-shadow: 0 0 8px var(--safe); }
+  .ind-warn { background: var(--warn); box-shadow: 0 0 8px var(--warn); }
+  .ind-danger { background: var(--danger); box-shadow: 0 0 8px var(--danger); }
+
+  /* ── OPENCV HUD ── */
+  .cv-hud {
+    position: relative; background: #080808;
+    border: 1px solid #222; border-radius: 6px; overflow: hidden;
+    height: 260px;
+  }
+  .cv-hud canvas { display: block; width: 100%; height: 100%; }
+  .cv-label {
+    position: absolute; top: 8px; left: 10px;
+    font-size: .55rem; color: rgba(255,255,255,.35); letter-spacing: .12em; text-transform: uppercase;
+  }
+  .cv-fps {
+    position: absolute; bottom: 8px; left: 10px;
+    font-size: .55rem; color: var(--safe); letter-spacing: .1em;
+  }
+
+  .desc-section { margin-top: 1.2rem; }
+  .desc-section h3 {
+    font-family: 'Bebas Neue', sans-serif; font-size: 1rem;
+    color: var(--white); letter-spacing: .06em; margin-bottom: .5rem;
+  }
+  .desc-section p { color: #777; font-size: .78rem; line-height: 1.6; }
+  .tech-tag {
+    display: inline-block; padding: .25rem .6rem; margin: .2rem;
+    border: 1px solid #333; border-radius: 3px; font-size: .6rem;
+    color: var(--accent); letter-spacing: .08em;
+  }
+  
+  .analogy-card {
+    margin-top: 1rem; padding: 1rem; border-radius: 6px;
+    background: linear-gradient(135deg, rgba(200,169,110,.1) 0%, rgba(0,0,0,.5) 100%);
+    border: 1px dashed rgba(200,169,110,.4);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; height: 140px; position: relative; overflow: hidden;
+  }
+  .analogy-title {
+    font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; color: var(--accent);
+    letter-spacing: .08em; z-index: 2; margin-bottom: .5rem;
+  }
+  .analogy-desc {
+    font-family: 'Space Mono', monospace; font-size: .65rem; color: #aaa;
+    max-width: 90%; z-index: 2;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="btn-back">← Retour au CV</a>
+  <span class="page-title">VÉHICULE AUTONOME — RASPBERRY PI + LIDAR + IA</span>
+  <div style="width:120px"></div>
+</header>
+
+<div class="main-grid">
+
+  <!-- LEFT: SIMULATION + TELEMETRY -->
+  <div style="display:flex; flex-direction:column; gap:1.2rem;">
+    <div class="canvas-box">
+      <span class="canvas-label">Simulation Temps Réel — Vue Top-Down</span>
+      <canvas id="roadSim" width="560" height="500"></canvas>
+    </div>
+    <div class="panel">
+      <h2>Télémétrie</h2>
+      <div class="tele-row"><span>Statut IA</span><span class="tele-val" id="t-state"><span class="indicator ind-safe"></span>NAVIGATION</span></div>
+      <div class="tele-row"><span>Distance Obstacle</span><span class="tele-val" id="t-dist">—</span></div>
+      <div class="tele-row"><span>Action</span><span class="tele-val" id="t-action">MAINTIEN VOIE</span></div>
+      <div class="tele-row"><span>Vitesse</span><span class="tele-val" id="t-speed">60 km/h</span></div>
+    </div>
+  </div>
+
+  <!-- RIGHT: OPENCV CAMERA + DETAILS -->
+  <div style="display:flex; flex-direction:column; gap:1.2rem;">
+    <div class="cv-hud">
+      <span class="cv-label">Caméra Embarquée — OpenCV / YOLOv8</span>
+      <canvas id="cvCam" width="560" height="260"></canvas>
+      <span class="cv-fps">FPS: 60 | YOLOv8-Nano | Raspberry Pi 5</span>
+    </div>
+    <div class="panel">
+      <h2>Détails du Projet</h2>
+      <p>Conception d'un système de perception et de navigation autonome sur Raspberry Pi. Le véhicule utilise un LIDAR 360° pour la détection d'obstacles et une caméra traitée par OpenCV + YOLOv8 pour la classification.</p>
+      <div class="desc-section">
+        <h3>Technologies</h3>
+        <span class="tech-tag">Raspberry Pi 5</span>
+        <span class="tech-tag">Python</span>
+        <span class="tech-tag">OpenCV</span>
+        <span class="tech-tag">YOLOv8</span>
+        <span class="tech-tag">RPLidar A1</span>
+        <span class="tech-tag">ROS2</span>
+        <span class="tech-tag">PWM Motor</span>
+      </div>
+      <div class="desc-section">
+        <h3>Utilité dans la Vie Réelle</h3>
+        <p>Ce système est le fondement de la conduite autonome : un véhicule qui perçoit son environnement et prend des décisions en temps réel sans intervention humaine. Ce type de capteur et d'algorithme est utilisé par Tesla, Waymo, et dans les drones de livraison.</p>
+
+        <div class="analogy-card">
+          <div class="analogy-title">🌆 ANALOGIE : FULL SELF-DRIVING (FSD)</div>
+          <div class="analogy-desc">Superposition de Bounding Boxes LiDAR/Vision dans l'habitacle d'un véhicule autonome urbain.<br><br><i>[Emplacement libre pour insérer votre photo HD de système autonome]</i></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// ──────── ROAD SIMULATION (Top-Down) ──────
+// ═══════════════════════════════════════════
+const roadC = document.getElementById('roadSim');
+const rCtx = roadC.getContext('2d');
+
+let roadScroll = 0;
+const ROAD_SPEED = 5;
+const ROAD_LEFT = 80;
+const ROAD_RIGHT = 480;
+const ROAD_W = ROAD_RIGHT - ROAD_LEFT;
+const LANE_W = ROAD_W / 3;
+
+// Ego car
+let ego = { x: 280, targetX: 280, y: 420, w: 36, h: 60 };
+
+// Other vehicles (obstacles)
+let vehicles = [];
+let vehId = 0;
+let frameN = 0;
+
+// Colors for other vehicles
+const vehColors = ['#e74c3c','#3498db','#1abc9c','#9b59b6','#f39c12'];
+
+function spawnVehicle() {
+  const laneIdx = Math.floor(Math.random() * 3);
+  const laneCenter = ROAD_LEFT + LANE_W * laneIdx + LANE_W / 2;
+  vehicles.push({
+    id: vehId++, x: laneCenter, y: -80, w: 34, h: 55,
+    speed: 1.5 + Math.random() * 1.5,
+    color: vehColors[Math.floor(Math.random() * vehColors.length)],
+    lane: laneIdx
+  });
+}
+
+function getLaneCenter(idx) { return ROAD_LEFT + LANE_W * idx + LANE_W / 2; }
+function getEgoLane() { return Math.round((ego.x - ROAD_LEFT - LANE_W/2) / LANE_W); }
+
+function drawRoad() {
+  rCtx.clearRect(0, 0, roadC.width, roadC.height);
+
+  // Grass / shoulder
+  rCtx.fillStyle = '#0d1a0d';
+  rCtx.fillRect(0, 0, roadC.width, roadC.height);
+
+  // Road surface
+  rCtx.fillStyle = '#1c1c1c';
+  rCtx.fillRect(ROAD_LEFT, 0, ROAD_W, roadC.height);
+
+  // Road edges (solid white)
+  rCtx.strokeStyle = '#fff';
+  rCtx.lineWidth = 3;
+  rCtx.beginPath(); rCtx.moveTo(ROAD_LEFT, 0); rCtx.lineTo(ROAD_LEFT, roadC.height); rCtx.stroke();
+  rCtx.beginPath(); rCtx.moveTo(ROAD_RIGHT, 0); rCtx.lineTo(ROAD_RIGHT, roadC.height); rCtx.stroke();
+
+  // Dashed lane lines
+  rCtx.setLineDash([25, 25]);
+  rCtx.strokeStyle = '#666';
+  rCtx.lineWidth = 2;
+  roadScroll = (roadScroll + ROAD_SPEED) % 50;
+  for (let i = 1; i < 3; i++) {
+    let lx = ROAD_LEFT + LANE_W * i;
+    rCtx.beginPath(); rCtx.moveTo(lx, -50 + roadScroll); rCtx.lineTo(lx, roadC.height); rCtx.stroke();
+  }
+  rCtx.setLineDash([]);
+}
+
+function drawVehicle(v, isEgo) {
+  rCtx.save();
+  rCtx.translate(v.x, v.y);
+  // Shadow
+  rCtx.fillStyle = 'rgba(0,0,0,.5)';
+  rCtx.fillRect(-v.w/2 + 3, -v.h/2 + 5, v.w, v.h);
+  // Body
+  rCtx.fillStyle = isEgo ? '#fff' : v.color;
+  rCtx.fillRect(-v.w/2, -v.h/2, v.w, v.h);
+  // Windshield
+  rCtx.fillStyle = isEgo ? 'var(--accent)' : 'rgba(0,0,0,.4)';
+  rCtx.fillStyle = isEgo ? '#c8a96e' : 'rgba(0,0,0,.4)';
+  rCtx.fillRect(-v.w/2 + 4, -v.h/2 + 4, v.w - 8, v.h * 0.35);
+  // Tail lights
+  if (!isEgo) {
+    rCtx.fillStyle = '#e74c3c';
+    rCtx.fillRect(-v.w/2 + 2, v.h/2 - 6, 8, 4);
+    rCtx.fillRect(v.w/2 - 10, v.h/2 - 6, 8, 4);
+  }
+  // LIDAR on ego
+  if (isEgo) {
+    rCtx.fillStyle = '#3498db';
+    rCtx.beginPath(); rCtx.arc(0, -v.h/2 + 8, 5, 0, Math.PI*2); rCtx.fill();
+  }
+  rCtx.restore();
+}
+
+function simulate() {
+  frameN++;
+  // Spawn every ~2.5s
+  if (frameN % 80 === 0) spawnVehicle();
+
+  drawRoad();
+
+  // Update vehicles
+  let closest = null;
+  let minDist = Infinity;
+
+  for (let i = vehicles.length - 1; i >= 0; i--) {
+    let v = vehicles[i];
+    v.y += (ROAD_SPEED - v.speed);
+    if (v.y > roadC.height + 100) { vehicles.splice(i, 1); continue; }
+    drawVehicle(v, false);
+
+    // Check if in front of ego and on same or adjacent lane
+    if (v.y < ego.y && v.y > 0) {
+      let dist = ego.y - v.y;
+      if (dist < minDist) { minDist = dist; closest = v; }
+    }
+  }
+
+  // ── AI AVOIDANCE LOGIC ──
+  let state = 'NAVIGATION';
+  let action = 'MAINTIEN VOIE';
+  let avoiding = false;
+
+  if (closest && minDist < 220) {
+    let sameOrNear = Math.abs(closest.x - ego.x) < LANE_W * 0.7;
+
+    if (sameOrNear && minDist < 160) {
+      avoiding = true;
+      // Find free lane
+      let egoLane = getEgoLane();
+      let closestLane = closest.lane;
+      let lanes = [0, 1, 2].filter(l => l !== closestLane);
+      // Also filter occupied lanes
+      lanes = lanes.filter(candL => {
+        return !vehicles.some(v2 => v2 !== closest && v2.lane === candL && Math.abs(v2.y - ego.y) < 120);
+      });
+      if (lanes.length > 0) {
+        lanes.sort((a,b) => Math.abs(a - egoLane) - Math.abs(b - egoLane));
+        ego.targetX = getLaneCenter(lanes[0]);
+        action = ego.targetX < ego.x ? 'BRAQUAGE GAUCHE' : 'BRAQUAGE DROIT';
+      }
+    } else if (sameOrNear) {
+      state = 'TRACKING';
+    }
+
+    // Speed simulation
+    document.getElementById('t-speed').textContent = avoiding ? '35 km/h' : '50 km/h';
+    document.getElementById('t-dist').textContent = Math.round(minDist * 0.6) + ' cm';
+  } else {
+    document.getElementById('t-dist').textContent = '—';
+    document.getElementById('t-speed').textContent = '60 km/h';
+    // Return to center if free
+    if (!closest || minDist > 250) { ego.targetX = getLaneCenter(1); }
+  }
+
+  // Smooth car movement
+  ego.x += (ego.targetX - ego.x) * 0.08;
+
+  // Draw LIDAR rays
+  rCtx.strokeStyle = 'rgba(52,152,219,.25)';
+  rCtx.lineWidth = 1;
+  for (let a = -0.6; a <= 0.6; a += 0.15) {
+    let rayLen = 150;
+    let rx = ego.x + Math.sin(a) * rayLen;
+    let ry = ego.y - Math.cos(a) * rayLen;
+    rCtx.beginPath(); rCtx.moveTo(ego.x, ego.y - ego.h/2); rCtx.lineTo(rx, ry); rCtx.stroke();
+  }
+
+  drawVehicle(ego, true);
+
+  // Update telemetry
+  if (avoiding) {
+    document.getElementById('t-state').innerHTML = '<span class="indicator ind-danger"></span>ÉVITEMENT';
+    document.getElementById('t-action').textContent = action;
+  } else if (state === 'TRACKING') {
+    document.getElementById('t-state').innerHTML = '<span class="indicator ind-warn"></span>TRACKING';
+    document.getElementById('t-action').textContent = 'SURVEILLANCE';
+  } else {
+    document.getElementById('t-state').innerHTML = '<span class="indicator ind-safe"></span>NAVIGATION';
+    document.getElementById('t-action').textContent = 'MAINTIEN VOIE';
+  }
+
+  // ── UPDATE OPENCV CAMERA VIEW ──
+  drawCVCamera(closest, minDist, avoiding);
+
+  requestAnimationFrame(simulate);
+}
+
+// ═══════════════════════════════════════════
+// ──── OPENCV CAMERA SIMULATION (Canvas) ───
+// ═══════════════════════════════════════════
+const cvC = document.getElementById('cvCam');
+const cCtx = cvC.getContext('2d');
+
+function drawCVCamera(target, dist, isAvoiding) {
+  const W = cvC.width, H = cvC.height;
+  cCtx.clearRect(0, 0, W, H);
+
+  // Dark camera feed background with scan lines
+  cCtx.fillStyle = '#0c0c0c';
+  cCtx.fillRect(0, 0, W, H);
+  // Scanlines
+  cCtx.fillStyle = 'rgba(255,255,255,.015)';
+  for (let y = 0; y < H; y += 3) { cCtx.fillRect(0, y, W, 1); }
+
+  // Perspective road on camera
+  // Vanishing point
+  let vpx = W / 2, vpy = H * 0.35;
+
+  // Road trapezoid
+  cCtx.fillStyle = '#1a1a1a';
+  cCtx.beginPath();
+  cCtx.moveTo(vpx - 30, vpy);
+  cCtx.lineTo(0, H);
+  cCtx.lineTo(W, H);
+  cCtx.lineTo(vpx + 30, vpy);
+  cCtx.closePath();
+  cCtx.fill();
+
+  // Lane lines on camera
+  cCtx.strokeStyle = '#555';
+  cCtx.lineWidth = 1;
+  cCtx.setLineDash([8, 8]);
+  cCtx.beginPath(); cCtx.moveTo(vpx - 10, vpy); cCtx.lineTo(W * 0.3, H); cCtx.stroke();
+  cCtx.beginPath(); cCtx.moveTo(vpx + 10, vpy); cCtx.lineTo(W * 0.7, H); cCtx.stroke();
+  cCtx.setLineDash([]);
+
+  // Road edges
+  cCtx.strokeStyle = '#fff';
+  cCtx.lineWidth = 2;
+  cCtx.beginPath(); cCtx.moveTo(vpx - 30, vpy); cCtx.lineTo(0, H); cCtx.stroke();
+  cCtx.beginPath(); cCtx.moveTo(vpx + 30, vpy); cCtx.lineTo(W, H); cCtx.stroke();
+
+  // Draw target vehicle as a rectangle on camera
+  if (target && dist < 300) {
+    // Map the target position to camera perspective
+    let perspScale = Math.max(0.3, Math.min(1.8, 160 / dist));
+    let boxW = 60 * perspScale;
+    let boxH = 45 * perspScale;
+
+    // X mapping: map target.x from road coords to camera coords
+    let normX = (target.x - ROAD_LEFT) / ROAD_W; // 0-1
+    let camX = W * 0.15 + normX * W * 0.7;
+    let camY = vpy + (1 - perspScale / 1.8) * (H - vpy) * 0.6;
+
+    let x1 = camX - boxW / 2, y1 = camY - boxH / 2;
+
+    // Bounding box
+    let boxColor = dist < 120 ? '#e74c3c' : '#2ecc71';
+    cCtx.strokeStyle = boxColor;
+    cCtx.lineWidth = 2;
+    cCtx.strokeRect(x1, y1, boxW, boxH);
+
+    // Corner marks (OpenCV style)
+    let cornerLen = 8;
+    cCtx.lineWidth = 3;
+    // Top-left
+    cCtx.beginPath(); cCtx.moveTo(x1, y1 + cornerLen); cCtx.lineTo(x1, y1); cCtx.lineTo(x1 + cornerLen, y1); cCtx.stroke();
+    // Top-right
+    cCtx.beginPath(); cCtx.moveTo(x1 + boxW - cornerLen, y1); cCtx.lineTo(x1 + boxW, y1); cCtx.lineTo(x1 + boxW, y1 + cornerLen); cCtx.stroke();
+    // Bottom-left
+    cCtx.beginPath(); cCtx.moveTo(x1, y1 + boxH - cornerLen); cCtx.lineTo(x1, y1 + boxH); cCtx.lineTo(x1 + cornerLen, y1 + boxH); cCtx.stroke();
+    // Bottom-right
+    cCtx.beginPath(); cCtx.moveTo(x1 + boxW - cornerLen, y1 + boxH); cCtx.lineTo(x1 + boxW, y1 + boxH); cCtx.lineTo(x1 + boxW, y1 + boxH - cornerLen); cCtx.stroke();
+
+    // Label above box
+    let conf = dist < 120 ? '97' : '82';
+    let label = `VEHICLE ${conf}%`;
+    cCtx.font = '700 10px "Space Mono"';
+    let tw = cCtx.measureText(label).width;
+    cCtx.fillStyle = boxColor;
+    cCtx.fillRect(x1, y1 - 16, tw + 10, 15);
+    cCtx.fillStyle = '#fff';
+    cCtx.fillText(label, x1 + 5, y1 - 4);
+
+    // Distance label
+    cCtx.fillStyle = boxColor;
+    cCtx.font = '400 9px "Space Mono"';
+    cCtx.fillText(Math.round(dist * 0.6) + 'cm', x1, y1 + boxH + 12);
+
+    // Glow effect
+    cCtx.shadowColor = boxColor;
+    cCtx.shadowBlur = 15;
+    cCtx.strokeRect(x1, y1, boxW, boxH);
+    cCtx.shadowBlur = 0;
+  }
+
+  // Crosshair center
+  cCtx.strokeStyle = 'rgba(255,255,255,.15)';
+  cCtx.lineWidth = 1;
+  cCtx.beginPath(); cCtx.moveTo(W/2 - 15, H/2); cCtx.lineTo(W/2 + 15, H/2); cCtx.stroke();
+  cCtx.beginPath(); cCtx.moveTo(W/2, H/2 - 15); cCtx.lineTo(W/2, H/2 + 15); cCtx.stroke();
+}
+
+simulate();
+</script>
+</body>
+</html>

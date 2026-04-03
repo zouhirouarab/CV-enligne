@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zouhir OUARAB — Régulateur PID Trajectoire</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root { --black: #050505; --white: #f5f2ee; --accent: #c8a96e; }
+
+  body {
+    background: var(--black); color: var(--white);
+    font-family: 'Space Mono', monospace; min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center;
+  }
+
+  header {
+    width: 100%; padding: 1.5rem 2rem;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  a.btn-back {
+    color: var(--accent); text-decoration: none; border: 1px solid var(--accent);
+    padding: .5rem 1.2rem; font-size: .75rem; text-transform: uppercase;
+    letter-spacing: .12em; transition: .3s;
+  }
+  a.btn-back:hover { background: var(--accent); color: var(--black); }
+  .page-title {
+    font-family: 'Bebas Neue', sans-serif; letter-spacing: .1em;
+    font-size: 1.1rem; color: var(--accent); text-align: center;
+  }
+
+  .main-grid {
+    display: grid; grid-template-columns: 1.2fr 1fr; gap: 1.5rem;
+    width: 95%; max-width: 1200px; padding: 1rem 0 3rem;
+  }
+  @media (max-width: 900px) { .main-grid { grid-template-columns: 1fr; } }
+
+  .panel {
+    background: rgba(255,255,255,.03); border: 1px solid rgba(200,169,110,.15);
+    border-radius: 8px; padding: 1.5rem; backdrop-filter: blur(8px);
+  }
+  .panel h2 {
+    font-family: 'Bebas Neue', sans-serif; color: var(--accent);
+    font-size: 1.3rem; letter-spacing: .06em; margin-bottom: .8rem;
+  }
+  .panel p { color: #999; font-size: .82rem; line-height: 1.6; }
+
+  .canvas-box {
+    position: relative; border: 1px solid #222; border-radius: 6px;
+    overflow: hidden; background: #f5f2ee;
+  }
+  .canvas-box canvas { display: block; width: 100%; height: auto; }
+  .canvas-label {
+    position: absolute; top: 8px; left: 10px;
+    font-size: .55rem; color: rgba(0,0,0,.3); letter-spacing: .12em; text-transform: uppercase;
+    z-index: 2;
+  }
+
+  .chart-box {
+    border: 1px solid #222; border-radius: 6px; overflow: hidden;
+    background: #0a0a0a; position: relative; height: 130px;
+  }
+  .chart-box canvas { display: block; width: 100%; height: 100%; }
+  .chart-zero {
+    position: absolute; top: 50%; left: 0; right: 0;
+    height: 1px; background: #333; z-index: 1;
+  }
+  .chart-label {
+    text-align: center; font-size: .6rem; color: var(--accent);
+    letter-spacing: .15em; text-transform: uppercase; margin-top: .5rem;
+  }
+
+  .btn-perturb {
+    width: 100%; padding: 1rem; margin: 1.2rem 0;
+    background: transparent; border: 2px solid #e74c3c; color: #e74c3c;
+    font-family: 'Space Mono', monospace; font-size: .85rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .1em; cursor: pointer;
+    transition: .3s; border-radius: 4px;
+  }
+  .btn-perturb:hover { background: #e74c3c; color: #fff; }
+  .btn-perturb:active { transform: scale(.97); }
+
+  .tech-tag {
+    display: inline-block; padding: .25rem .6rem; margin: .15rem;
+    border: 1px solid #333; border-radius: 3px; font-size: .6rem;
+    color: var(--accent); letter-spacing: .08em;
+  }
+  .desc-section { margin-top: 1rem; }
+  .desc-section h3 {
+    font-family: 'Bebas Neue', sans-serif; font-size: 1rem;
+    color: var(--white); letter-spacing: .06em; margin-bottom: .4rem;
+  }
+  .desc-section p { color: #777; font-size: .78rem; line-height: 1.6; }
+
+  .analogy-card {
+    margin-top: 1rem; padding: 1rem; border-radius: 6px;
+    background: linear-gradient(135deg, rgba(200,169,110,.1) 0%, rgba(0,0,0,.5) 100%);
+    border: 1px dashed rgba(200,169,110,.4);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; height: 140px; position: relative; overflow: hidden;
+  }
+  .analogy-title {
+    font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; color: var(--accent);
+    letter-spacing: .08em; z-index: 2; margin-bottom: .5rem;
+  }
+  .analogy-desc {
+    font-family: 'Space Mono', monospace; font-size: .65rem; color: #aaa;
+    max-width: 90%; z-index: 2;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="btn-back">← Retour au CV</a>
+  <span class="page-title">RÉGULATEUR PID — ARDUINO / SUIVI DE LIGNE</span>
+  <div style="width:120px"></div>
+</header>
+
+<div class="main-grid">
+
+  <!-- LEFT: CANVAS + CHART -->
+  <div style="display:flex; flex-direction:column; gap:1rem;">
+    <div class="canvas-box">
+      <span class="canvas-label">Simulation Suivi de Ligne — Capteurs IR</span>
+      <canvas id="trackCanvas" width="560" height="480"></canvas>
+    </div>
+    <div class="chart-box">
+      <div class="chart-zero"></div>
+      <canvas id="errorChart" width="560" height="130"></canvas>
+    </div>
+    <div class="chart-label">Erreur PID en temps réel (vert = stable · rouge = perturbation)</div>
+  </div>
+
+  <!-- RIGHT: CONTROLS + DETAILS -->
+  <div style="display:flex; flex-direction:column; gap:1rem;">
+    <div class="panel">
+      <h2>Détails du Système</h2>
+      <p>Ce véhicule suit une trajectoire (ligne noire) en temps réel grâce à un tableau de capteurs infrarouges connectés à un Arduino. L'algorithme PID corrige en permanence l'écart entre le robot et la consigne.</p>
+      
+      <button class="btn-perturb" id="btn-perturb">⚠️ Perturber la Trajectoire</button>
+      <p style="font-size:.72rem; color:#666; line-height:1.5;">
+        <em>Simule un choc latéral (nid de poule, vent). Observez la correction rapide et la stabilisation sur le graphe.</em>
+      </p>
+    </div>
+    <div class="panel">
+      <div class="desc-section">
+        <h3>Technologies</h3>
+        <span class="tech-tag">Arduino Uno</span>
+        <span class="tech-tag">Capteurs IR QRE1113</span>
+        <span class="tech-tag">Pont H L298N</span>
+        <span class="tech-tag">C/C++</span>
+        <span class="tech-tag">PWM</span>
+      </div>
+      <div class="desc-section" style="margin-top:1.2rem;">
+        <h3>Utilité dans la vie réelle</h3>
+        <p>Le suivi de ligne est la brique fondamentale de la robotique industrielle : AGV dans les entrepôts Amazon, robots de chaîne de montage. Le PID est l'algorithme de régulation le plus utilisé au monde (90% des systèmes industriels).</p>
+        
+        <div class="analogy-card" style="padding:0; border:none; background:transparent; height:auto;">
+          <h4 style="font-family:'Bebas Neue',sans-serif; color:var(--accent); font-size:1.1rem; margin-bottom:0.5rem; letter-spacing:0.08em; text-align:center;">🚘 ANALOGIE : LSA / LANE KEEPING ASSIST</h4>
+          <p style="font-size:0.75rem; color:#aaa; text-align:center; margin-bottom:1rem;">Vision autoroute temps-réel</p>
+          <img src="analogie-lka.jpg" alt="Lane Keeping Assist Proxy" style="width:100%; border-radius:6px; border:1px solid #333;">
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const W = 560, H = 480;
+const trackCanvas = document.getElementById('trackCanvas');
+const tCtx = trackCanvas.getContext('2d');
+const errCanvas = document.getElementById('errorChart');
+const eCtx = errCanvas.getContext('2d');
+
+// ══════════════════════════════════════════
+// The track is defined as a series of waypoints.
+// The car drives ALONG the track (both x and y move).
+// ══════════════════════════════════════════
+
+// Generate a smooth winding track path (Closed loop Lissajous curve)
+const trackPoints = [];
+const NUM_PTS = 800; // More points for smoother angle calculation
+for (let i = 0; i < NUM_PTS; i++) {
+  let t = (i / NUM_PTS) * Math.PI * 2;
+  // Integer multipliers ensure the start and end connect perfectly
+  let x = W/2 + Math.sin(t) * 160 + Math.sin(2 * t) * 60;
+  let y = H/2 - Math.cos(t) * 140 - Math.sin(3 * t) * 40;
+  trackPoints.push({ x, y });
+}
+
+// Car state
+let carIdx = 0;  // Position index along track
+let carX = trackPoints[0].x;
+let carY = trackPoints[0].y;
+let carAngle = 0;
+let lateralOffset = 0; // Offset perpendicular to the track (the "error")
+let prevError = 0;
+let integral = 0;
+
+// PID tuning (well-tuned for demo)
+const Kp = 0.08;
+const Ki = 0.0002;
+const Kd = 0.15;
+const DRIVE_SPEED = 2; // points per frame along the track
+
+let errorHist = new Array(560).fill(0);
+
+// Perturbation
+document.getElementById('btn-perturb').addEventListener('click', () => {
+  lateralOffset += (Math.random() > 0.5 ? 1 : -1) * (40 + Math.random() * 30);
+});
+
+function getTrackAngle(idx) {
+  let i0 = idx % NUM_PTS;
+  let i1 = (idx + 1) % NUM_PTS;
+  let dx = trackPoints[i1].x - trackPoints[i0].x;
+  let dy = trackPoints[i1].y - trackPoints[i0].y;
+  return Math.atan2(dy, dx);
+}
+
+function update() {
+  // Advance along track
+  carIdx = (carIdx + DRIVE_SPEED) % NUM_PTS;
+  
+  let targetPt = trackPoints[Math.floor(carIdx) % NUM_PTS];
+  let angle = getTrackAngle(Math.floor(carIdx));
+
+  // PID: reduce lateralOffset toward 0
+  let error = lateralOffset;
+  integral += error * 0.016;
+  integral = Math.max(-50, Math.min(50, integral)); // anti-windup
+  let derivative = error - prevError;
+  
+  let correction = -(Kp * error + Ki * integral + Kd * derivative);
+  // Cap the correction to simulate a realistic maximum steering angle
+  correction = Math.max(-4, Math.min(4, correction));
+  
+  prevError = error;
+
+  lateralOffset += correction;
+  // Slight friction/decay for realism
+  lateralOffset *= 0.98;
+
+  // Car position = track point + perpendicular offset
+  let perpAngle = angle + Math.PI / 2;
+  carX = targetPt.x + Math.cos(perpAngle) * lateralOffset;
+  carY = targetPt.y + Math.sin(perpAngle) * lateralOffset;
+  carAngle = angle;
+
+  // ── DRAW ──
+  tCtx.fillStyle = '#f5f2ee';
+  tCtx.fillRect(0, 0, W, H);
+
+  // Grid
+  tCtx.strokeStyle = 'rgba(0,0,0,.04)';
+  tCtx.lineWidth = 1;
+  for (let gx = 0; gx < W; gx += 40) {
+    tCtx.beginPath(); tCtx.moveTo(gx, 0); tCtx.lineTo(gx, H); tCtx.stroke();
+  }
+  for (let gy = 0; gy < H; gy += 40) {
+    tCtx.beginPath(); tCtx.moveTo(0, gy); tCtx.lineTo(W, gy); tCtx.stroke();
+  }
+
+  // Draw track (the line)
+  tCtx.lineWidth = 18;
+  tCtx.strokeStyle = '#222';
+  tCtx.lineCap = 'round';
+  tCtx.lineJoin = 'round';
+  tCtx.beginPath();
+  for (let i = 0; i < NUM_PTS; i++) {
+    if (i === 0) tCtx.moveTo(trackPoints[i].x, trackPoints[i].y);
+    else tCtx.lineTo(trackPoints[i].x, trackPoints[i].y);
+  }
+  tCtx.closePath();
+  tCtx.stroke();
+
+  // Draw sensors (5 IR sensors under the car)
+  let sensorOffsets = [-12, -6, 0, 6, 12];
+  sensorOffsets.forEach(off => {
+    let sx = carX + Math.cos(perpAngle) * off;
+    let sy = carY + Math.sin(perpAngle) * off;
+    // Is this sensor on the line?
+    let onLine = Math.abs(off + lateralOffset) < 10;
+    tCtx.fillStyle = onLine ? '#2ecc71' : '#e74c3c';
+    tCtx.beginPath(); tCtx.arc(sx, sy, 3, 0, Math.PI * 2); tCtx.fill();
+  });
+
+  // Draw robot
+  tCtx.save();
+  tCtx.translate(carX, carY);
+  tCtx.rotate(carAngle);
+
+  // Shadow
+  tCtx.fillStyle = 'rgba(0,0,0,.12)';
+  tCtx.fillRect(-14, -20, 32, 44);
+
+  // Body
+  tCtx.fillStyle = '#c8a96e';
+  tCtx.fillRect(-16, -22, 32, 44);
+
+  // Wheels
+  tCtx.fillStyle = '#333';
+  tCtx.fillRect(-20, -16, 5, 14);
+  tCtx.fillRect(15, -16, 5, 14);
+  tCtx.fillRect(-20, 4, 5, 14);
+  tCtx.fillRect(15, 4, 5, 14);
+
+  // Direction arrow
+  tCtx.fillStyle = '#fff';
+  tCtx.beginPath();
+  tCtx.moveTo(20, 0);
+  tCtx.lineTo(10, -6);
+  tCtx.lineTo(10, 6);
+  tCtx.closePath();
+  tCtx.fill();
+
+  tCtx.restore();
+
+  // ── ERROR CHART ──
+  errorHist.push(lateralOffset);
+  errorHist.shift();
+
+  eCtx.clearRect(0, 0, 560, 130);
+  let midY = 65;
+  for (let i = 1; i < errorHist.length; i++) {
+    let eAbs = Math.abs(errorHist[i]);
+    let hue = eAbs < 8 ? 120 : (eAbs < 25 ? 50 : 0);
+    eCtx.strokeStyle = `hsl(${hue}, 80%, 50%)`;
+    eCtx.lineWidth = 2;
+    eCtx.beginPath();
+    eCtx.moveTo(i - 1, midY - errorHist[i - 1] * 0.8);
+    eCtx.lineTo(i, midY - errorHist[i] * 0.8);
+    eCtx.stroke();
+  }
+
+  requestAnimationFrame(update);
+}
+
+update();
+</script>
+</body>
+</html>

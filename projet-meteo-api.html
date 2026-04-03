@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Zouhir OUARAB — Dashboard Météo API</title>
+  <style>
+    :root {
+      --black: #050505;
+      --white: #f5f2ee;
+      --accent: #c8a96e;
+    }
+    body {
+      margin: 0; background: var(--black); color: var(--white);
+      font-family: 'Space Mono', monospace; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; min-height: 100vh;
+    }
+    header {
+      position: absolute; top: 0; left: 0; right: 0; padding: 2rem;
+      display: flex; justify-content: space-between; align-items: center; z-index: 10;
+    }
+    a.btn-back {
+      color: var(--accent); text-decoration: none; border: 1px solid var(--accent);
+      padding: 0.5rem 1rem; font-size: 0.8rem; text-transform: uppercase;
+      transition: all 0.3s;
+    }
+    a.btn-back:hover { background: var(--accent); color: var(--black); }
+    h1 { margin: 0; font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.1em; font-size: 2rem; }
+    
+    .screen {
+      background: #000; border: 8px solid #1a1a1a; border-radius: 12px;
+      width: 400px; height: 300px; padding: 2rem;
+      box-shadow: inset 0 0 20px rgba(200,169,110,0.1), 0 20px 50px rgba(0,0,0,0.8);
+      position: relative; overflow: hidden;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .screen::after { 
+      content: ''; position: absolute; top: -50%; left: -50%; right: -50%; bottom: -50%;
+      background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 40%);
+      pointer-events: none; transform: rotate(-15deg);
+    }
+    
+    .city { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; letter-spacing: 0.1em; color: var(--accent); margin: 0; }
+    .temp { font-size: 4rem; font-weight: bold; margin: 0; line-height: 1; }
+    .desc { font-size: 1rem; color: #888; text-transform: uppercase; letter-spacing: 0.1em; }
+    
+    .bottom-row { display: flex; justify-content: space-between; border-top: 1px solid #333; padding-top: 1rem; margin-top:1rem; }
+    .stat { display: flex; flex-direction: column; gap: 0.2rem; }
+    .stat-val { color: var(--accent); font-size: 1.2rem; }
+    .stat-lbl { color: #666; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; }
+    
+    .terminal {
+      margin-top: 2rem; width: 440px; font-size: 0.7rem; color: #555; height: 100px; overflow-y: hidden;
+      background: #0a0a0a; padding: 10px; border: 1px solid #222; border-radius: 4px; line-height: 1.4;
+    }
+    .terminal span { color: var(--accent); }
+    .terminal .err { color: #e74c3c; }
+    .terminal .succ { color: #2ecc71; }
+
+    .analogy-card {
+      margin-top: 2rem; padding: 1rem; border-radius: 6px; width: 440px;
+      background: linear-gradient(135deg, rgba(200,169,110,.1) 0%, rgba(0,0,0,.5) 100%);
+      border: 1px dashed rgba(200,169,110,.4);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; height: 140px; position: relative; overflow: hidden;
+    }
+    .analogy-title {
+      font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; color: var(--accent);
+      letter-spacing: .08em; z-index: 2; margin-bottom: .5rem;
+    }
+    .analogy-desc {
+      font-family: 'Space Mono', monospace; font-size: .65rem; color: #aaa;
+      max-width: 90%; z-index: 2;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="btn-back">← Retour au CV</a>
+  <h1>DASHBOARD MÉTÉO (API TEMPS RÉEL)</h1>
+  <div style="width: 100px;"></div>
+</header>
+
+<div class="screen" id="weather-screen">
+  <div>
+    <h2 class="city" id="w-city">INITIALISATION...</h2>
+    <p class="desc" id="w-desc">DEMANDE DE LOCALISATION GPS</p>
+    <p class="temp" id="w-temp">--°</p>
+  </div>
+  
+  <div class="bottom-row">
+    <div class="stat"><span class="stat-val" id="w-wind">-- km/h</span><span class="stat-lbl">Vent (Vitesse)</span></div>
+    <div class="stat"><span class="stat-val" id="w-wind-dir">--°</span><span class="stat-lbl">Vent (Direction)</span></div>
+  </div>
+</div>
+
+<div class="terminal" id="terminal">
+  > SYSTEM BOOT SEQ... OK<br>
+  > REQUESTING BROWSER GEOLOCATION...<br>
+</div>
+
+<div class="analogy-card">
+  <div class="analogy-title">🌍 ANALOGIE : SMART CITY & SALLE DE CONTRÔLE</div>
+  <div class="analogy-desc">Interface d'Hypervision urbaine supervisant les capteurs météorologiques globaux avec UI moderne.<br><br><i>[Emplacement libre pour insérer votre photo HD de Dashboard]</i></div>
+</div>
+
+<script>
+  const term = document.getElementById('terminal');
+  
+  function logTerm(msg, type='') {
+    let colorClass = '';
+    if(type==='err') colorClass = 'err';
+    if(type==='succ') colorClass = 'succ';
+    if(type==='hilite') colorClass = ''; // using span
+    
+    let text = type === 'hilite' ? `> <span>${msg}</span>` : `> <span class="${colorClass}">${msg}</span>`;
+    term.innerHTML += text + '<br>';
+    term.scrollTop = term.scrollHeight;
+  }
+
+  // WMO Weather interpretation codes
+  function getWeatherDesc(code) {
+    const codes = {
+      0: 'Ciel Dégagé', 1: 'Principalement Clair', 2: 'Partiellement Nuageux', 3: 'Couvert',
+      45: 'Brouillard', 48: 'Brouillard Givrant', 51: 'Bruine Légère', 53: 'Bruine Modérée', 55: 'Bruine Forte',
+      61: 'Pluie Faible', 63: 'Pluie Modérée', 65: 'Pluie Forte', 71: 'Chute de Neige Légère',
+      73: 'Chute de Neige Modérée', 75: 'Chute de Neige Forte', 95: 'Orage'
+    };
+    return codes[code] || 'Météo Inconnue';
+  }
+
+  async function fetchRealWeather(lat, lon, cityName) {
+    logTerm(`CONNECTING TO OPEN-METEO API FOR [${lat.toFixed(2)}, ${lon.toFixed(2)}]...`);
+    
+    try {
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
+      logTerm(url);
+      
+      const response = await fetch(url);
+      if(!response.ok) throw new Error('API Error');
+      
+      const data = await response.json();
+      const current = data.current_weather;
+      
+      logTerm(`[HTTP 200] DATA RECEIVED`, 'succ');
+      
+      document.getElementById('w-city').textContent = cityName.toUpperCase();
+      document.getElementById('w-desc').textContent = getWeatherDesc(current.weathercode).toUpperCase();
+      document.getElementById('w-temp').textContent = Math.round(current.temperature) + '°';
+      document.getElementById('w-wind').textContent = current.windspeed + ' km/h';
+      document.getElementById('w-wind-dir').textContent = current.winddirection + '°';
+      
+    } catch (err) {
+      logTerm('FAILED TO FETCH METEO DATA', 'err');
+      document.getElementById('w-city').textContent = 'ERREUR API';
+      document.getElementById('w-desc').textContent = 'ÉCHEC DE LA CONNEXION';
+    }
+  }
+
+  // Fallback to Paris
+  function fallbackToParis() {
+    logTerm('USING DEFAULT LOCATION: PARIS', 'err');
+    fetchRealWeather(48.8566, 2.3522, 'PARIS (DÉFAUT)');
+  }
+
+  // Request Location
+  if ("geolocation" in navigator) {
+    let resolved = false;
+    // Strict fallback timeout because browsers often ignore silent blocks
+    let fallbackTimer = setTimeout(() => {
+        if (!resolved) {
+            resolved = true;
+            logTerm('GEOLOCATION TIMEOUT (SILENT BLOCK)', 'err');
+            fallbackToParis();
+        }
+    }, 4500);
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        if (resolved) return;
+        resolved = true;
+        clearTimeout(fallbackTimer);
+        
+        logTerm('GEOLOCATION ACQUIRED', 'succ');
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        logTerm(`LAT: ${lat.toFixed(4)} | LON: ${lon.toFixed(4)}`);
+        
+        try {
+            logTerm('REVERSE GEOCODING LOCATION...');
+            const geoRes = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=fr`);
+            const geoData = await geoRes.json();
+            const city = geoData.locality || geoData.city || 'POSITION LOCALE';
+            fetchRealWeather(lat, lon, city);
+        } catch(e) {
+            logTerm('GEOCODING FAILED, USING EXACT POSITION', 'err');
+            fetchRealWeather(lat, lon, 'POSITION ACTUELLE');
+        }
+      },
+      (error) => {
+        if (resolved) return;
+        resolved = true;
+        clearTimeout(fallbackTimer);
+        
+        logTerm('GEOLOCATION DENIED OR UNAVAILABLE (CODE: '+error.code+')', 'err');
+        fallbackToParis();
+      },
+      { timeout: 4000 }
+    );
+  } else {
+    logTerm('GEOLOCATION NOT SUPPORTED BY BROWSER', 'err');
+    fallbackToParis();
+  }
+</script>
+
+</body>
+</html>
