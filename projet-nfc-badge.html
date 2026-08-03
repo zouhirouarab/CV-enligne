@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zouhir Ouarab — Interface RFID/NFC</title>
+  <meta name="description" content="Développement d'une IHM Android pour lire et dupliquer des badges NFC avec gestion asynchrone du matériel.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* ── DESIGN TOKENS ── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg:#151c2e; --surface:#1e263d; --surface2:#0c1020;
+      --border:rgba(80,140,255,.12); --border2:rgba(80,140,255,.25);
+      --text:#e8ecf4; --dim:#8a95aa; --dim2:#4a5570;
+      --cyan:#00D4AA; --green:#70b8e8; --accent:#c8a96e;
+      --sans:'Inter',system-ui,sans-serif;
+      --mono:'JetBrains Mono',monospace;
+    }
+    img { display: block; max-width: 100%; }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: var(--sans); display: flex; flex-direction: column;
+      align-items: center; justify-content: center; min-height: 100vh; padding: 7rem 1rem 2rem;
+      -webkit-font-smoothing: antialiased;
+    }
+    header {
+      position: absolute; top: 0; left: 0; right: 0; padding: 1.5rem 2rem;
+      display: flex; justify-content: space-between; align-items: center; z-index: 10;
+      border-bottom: 1px solid var(--border); background: rgba(21,28,46,.95); backdrop-filter: blur(12px);
+    }
+    a.btn-back {
+      color: var(--cyan); text-decoration: none; border: 1px solid var(--border2);
+      padding: .5rem 1rem; font-family: var(--mono); font-size: .8rem;
+      text-transform: uppercase; letter-spacing: .1em; transition: all 0.3s;
+    }
+    a.btn-back:hover { background: var(--cyan); color: var(--bg); }
+    h1 {
+      margin: 0; font-family: var(--mono); letter-spacing: .06em;
+      font-size: 1rem; font-weight: 700; color: var(--text); text-transform: uppercase;
+    }
+    .page-wrap {
+      width: min(100%, 980px);
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 2rem; align-items: start;
+    }
+    /* ── ANDROID PHONE SIMULATOR ── */
+    .phone {
+      background: #000; border: 12px solid #2c3e50; border-radius: 30px;
+      width: 100%; max-width: 340px; height: 600px; padding: 1rem;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+      position: relative; overflow: hidden; margin: 0 auto;
+      display: flex; flex-direction: column;
+      font-family: 'Inter', sans-serif;
+    }
+    .phone-header {
+      text-align: center; color: white; padding-bottom: 1rem; border-bottom: 1px solid #333;
+    }
+    .phone-title { font-weight: 700; font-size: 1.2rem; color: var(--cyan); margin-top: 10px; }
+    
+    .nfc-status {
+      text-align: center; margin: 2rem 0;
+    }
+    .nfc-icon {
+      font-size: 4rem; display: inline-block; transition: transform 0.3s;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.1); opacity: 1; text-shadow: 0 0 15px var(--cyan); }
+      100% { transform: scale(1); opacity: 0.8; }
+    }
+    .status-text {
+      color: var(--dim); font-size: 0.9rem; margin-top: 1rem; text-transform: uppercase; letter-spacing: 1px;
+    }
+    
+    .badge-data {
+      background: #111; border: 1px solid #333; border-radius: 10px; padding: 1rem;
+      flex-grow: 1; overflow-y: auto; font-family: var(--mono); font-size: 0.75rem; color: #aaa;
+    }
+    .badge-data span { color: var(--cyan); }
+    
+    .action-btn {
+      background: var(--cyan); color: #000; border: none; border-radius: 5px;
+      padding: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+      margin-top: 1rem; cursor: pointer; transition: background 0.3s;
+    }
+    .action-btn:hover { background: #00e0b4; }
+
+    /* ── INFO PANEL ── */
+    .info-panel {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 1.5rem;
+    }
+    .info-panel h2 {
+      margin: 0 0 .75rem; font-family: var(--mono);
+      color: var(--cyan); font-size: .9rem; letter-spacing: .1em;
+      text-transform: uppercase; font-weight: 700;
+    }
+    .info-panel p { color: var(--dim); font-size: .88rem; line-height: 1.7; }
+    .desc-section { margin-top: 1.5rem; }
+    .desc-section h3 {
+      margin: 0 0 .4rem; font-family: var(--mono);
+      color: var(--text); font-size: .75rem; letter-spacing: .1em; text-transform: uppercase;
+    }
+    .tech-tag {
+      display: inline-block; padding: .3rem .7rem; margin: .15rem;
+      border: 1px solid var(--border2); border-radius: 3px; font-size: .65rem;
+      color: var(--cyan); letter-spacing: .08em; font-family: var(--mono);
+      background: rgba(80,144,240,.05);
+    }
+    .analogy-wrap {
+      margin-top: 1rem; border-radius: 6px; overflow: hidden;
+      border: 1px solid var(--border2); background: rgba(80,144,240,.04);
+    }
+    .analogy-header { padding: .8rem 1rem; border-bottom: 1px solid var(--border); }
+    .analogy-header h4 {
+      font-family: var(--mono); font-size: .75rem; color: var(--cyan);
+      letter-spacing: .1em; text-transform: uppercase; margin-bottom: .2rem; font-weight: 700;
+    }
+    .analogy-header p { font-size: .72rem; color: var(--dim); font-family: var(--mono); }
+    
+    @media (max-width: 860px) {
+      header { padding: 1rem; flex-direction: column; gap: .75rem; }
+      .page-wrap { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="btn-back">← Retour au CV</a>
+  <h1>IHM MATÉRIELLE RFID/NFC</h1>
+  <div style="width: 100px;"></div>
+</header>
+
+<div class="page-wrap">
+  <div>
+    <div class="phone">
+      <div class="phone-header">
+        <div class="phone-title">NFCBadgeDuplicator</div>
+      </div>
+      
+      <div class="nfc-status">
+        <div class="nfc-icon" id="nfc-icon">📱</div>
+        <div class="status-text" id="status-text">PRÊT À SCANNER...</div>
+      </div>
+      
+      <div class="badge-data" id="badge-data">
+        > En attente du module matériel RC522...<br>
+        > État IHM : <span style="color:#2ecc71">IDLE</span>
+      </div>
+      
+      <button class="action-btn" onclick="simulateScan()">Simuler Lecture Asynchrone</button>
+    </div>
+    <div style="margin-top: 2rem; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: #000; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+      <div style="padding: 0.5rem 1rem; background: rgba(0,0,0,0.5); font-family: var(--mono); font-size: 0.75rem; border-bottom: 1px solid var(--border);">
+        <span style="color:var(--cyan)">●</span> Capture réelle de l'application Android
+      </div>
+      <img src="NFC_interface_app.jpg" alt="Capture réelle de l'application NFC" style="width: 100%; display: block;">
+    </div>
+  </div>
+
+  <div class="info-panel">
+    <h2>Architecture et Interface Utilisateur (UX)</h2>
+    <p>Conception et développement intégral d'une application Android (Java) permettant de lire, stocker et dupliquer des badges RFID/NFC Mifare Classic en communiquant avec un lecteur matériel externe (RC522) via un protocole série.</p>
+    
+    <div class="desc-section">
+      <h3>Le défi : L'Expérience Utilisateur (UX)</h3>
+      <p>L'enjeu technique principal de ce projet n'était pas la lecture NFC en elle-même, mais la <strong>gestion de l'asynchronisme matériel</strong>. Les opérations de balayage cryptographique des clés Mifare par le capteur prennent un temps variable (latence). Si l'interface attend de manière séquentielle, l'application se bloque ("freeze"), générant une mauvaise expérience utilisateur.</p>
+    </div>
+
+    <div class="desc-section">
+      <h3>La solution : State Machine Asynchrone</h3>
+      <p>Pour garantir la fluidité de l'interface, j'ai développé une architecture basée sur une <strong>Machine à États (State Machine)</strong>. Le processus matériel tourne sur un <em>thread</em> séparé (Back-end) qui communique en permanence avec l'IHM (Front-end) pour afficher la progression en temps réel sans jamais figer l'écran.</p>
+    </div>
+
+    <div class="desc-section">
+      <h3>Stack Technologique</h3>
+      <span class="tech-tag">Java</span>
+      <span class="tech-tag">Android Studio</span>
+      <span class="tech-tag">UX/UI Asynchrone</span>
+      <span class="tech-tag">UART / RC522</span>
+      <span class="tech-tag">RFID / Mifare</span>
+    </div>
+    
+    <div class="desc-section">
+      <div class="analogy-wrap">
+        <div class="analogy-header">
+          <h4>🌍 APPLICABILITÉ INDUSTRIELLE</h4>
+          <p>Le pilotage logiciel de capteurs lents ou asynchrones (comme une caméra scientifique ou un scanner 3D) requiert systématiquement ce type d'architecture IHM (C++/Qt ou Java) pour assurer une supervision fluide.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const dataLog = document.getElementById('badge-data');
+  const statusText = document.getElementById('status-text');
+  const nfcIcon = document.getElementById('nfc-icon');
+  
+  function wait(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  async function simulateScan() {
+    // Reset
+    dataLog.innerHTML = "> État IHM : <span style='color:#f1c40f'>WAIT_HARDWARE</span><br>";
+    statusText.textContent = "BALAYAGE CRYPTOGRAPHIQUE...";
+    nfcIcon.style.animationDuration = "0.5s";
+    
+    // Simulate non-blocking async hardware read
+    await wait(800);
+    dataLog.innerHTML += "> Test clé MAD (A0A1A2A3A4A5)... [ÉCHEC]<br>";
+    
+    await wait(600);
+    dataLog.innerHTML += "> Test clé par défaut (FFFFFFFFFFFF)... <span style='color:#2ecc71'>[OK]</span><br>";
+    
+    await wait(800);
+    dataLog.innerHTML += "> Lecture du Secteur 0...<br>";
+    
+    await wait(500);
+    statusText.textContent = "LECTURE TERMINÉE";
+    nfcIcon.style.animationDuration = "2s";
+    
+    dataLog.innerHTML += `<br><span style='color:#00D4AA'>--- BADGE DÉTECTÉ ---</span><br>
+    Type : MIFARE Classic 1K<br>
+    UID : <span>A1 B2 C3 D4</span><br>
+    Secteurs lisibles : 16/16<br>
+    Taille : 1024 bytes<br><br>
+    > État IHM : <span style='color:#2ecc71'>READY</span>`;
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zouhir Ouarab — Restauration d'Images (Dehazing)</title>
+  <meta name="description" content="Implémentation d'algorithmes de désembuage pour extraire l'information dans des conditions météorologiques critiques.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* ── DESIGN TOKENS ── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg:#151c2e; --surface:#1e263d; --surface2:#0c1020;
+      --border:rgba(80,140,255,.12); --border2:rgba(80,140,255,.25);
+      --text:#e8ecf4; --dim:#8a95aa; --dim2:#4a5570;
+      --cyan:#00d4aa; --green:#70b8e8; --accent:#c8a96e;
+      --sans:'Inter',system-ui,sans-serif;
+      --mono:'JetBrains Mono',monospace;
+    }
+    img { display: block; max-width: 100%; }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: var(--sans); display: flex; flex-direction: column;
+      align-items: center; justify-content: center; min-height: 100vh; padding: 7rem 1rem 2rem;
+      -webkit-font-smoothing: antialiased;
+    }
+    header {
+      position: absolute; top: 0; left: 0; right: 0; padding: 1.5rem 2rem;
+      display: flex; justify-content: space-between; align-items: center; z-index: 10;
+      border-bottom: 1px solid var(--border); background: rgba(21,28,46,.95); backdrop-filter: blur(12px);
+    }
+    a.btn-back {
+      color: var(--cyan); text-decoration: none; border: 1px solid var(--border2);
+      padding: .5rem 1rem; font-family: var(--mono); font-size: .8rem;
+      text-transform: uppercase; letter-spacing: .1em; transition: all 0.3s;
+    }
+    a.btn-back:hover { background: var(--cyan); color: var(--bg); }
+    h1 {
+      margin: 0; font-family: var(--mono); letter-spacing: .06em;
+      font-size: 1rem; font-weight: 700; color: var(--text); text-transform: uppercase;
+    }
+    .page-wrap {
+      width: min(100%, 980px);
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 2rem; align-items: start;
+    }
+
+    /* ── IMAGE COMPARISON SLIDER ── */
+    .compare-container {
+      position: relative; width: 100%; height: 400px;
+      border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5); background: #000;
+    }
+    /* Simulated clean image */
+    .img-clean {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background-image: url('F01.png');
+      background-size: cover; background-position: center;
+      /* Filtre temporaire en attendant l'image restaurée exacte */
+      filter: contrast(1.8) brightness(0.9);
+    }
+    /* Simulated hazy image (using CSS filters to simulate atmospheric scattering) */
+    .img-haze {
+      position: absolute; top: 0; left: 0; width: 50%; height: 100%;
+      background-image: url('F01.png');
+      background-size: cover; background-position: center;
+      border-right: 2px solid var(--cyan);
+      overflow: hidden;
+    }
+    
+    .slider-control {
+      position: absolute; bottom: -40px; width: 100%;
+      display: flex; justify-content: center;
+    }
+    input[type=range] {
+      width: 100%; cursor: ew-resize; appearance: none; background: transparent;
+      position: absolute; top: 50%; transform: translateY(-50%); z-index: 10; opacity: 0;
+    }
+
+    .metrics-box {
+      margin-top: 1rem; background: #0c1020; padding: 1rem; border-radius: 6px;
+      border: 1px solid var(--border); display: flex; justify-content: space-between;
+      font-family: var(--mono); font-size: 0.75rem; color: var(--dim);
+    }
+    .metric { text-align: center; }
+    .metric span { display: block; color: var(--text); font-size: 1.1rem; font-weight: bold; margin-bottom: 0.3rem; }
+
+    /* ── INFO PANEL ── */
+    .info-panel {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 1.5rem;
+    }
+    .info-panel h2 {
+      margin: 0 0 .75rem; font-family: var(--mono);
+      color: var(--cyan); font-size: .9rem; letter-spacing: .1em;
+      text-transform: uppercase; font-weight: 700;
+    }
+    .info-panel p { color: var(--dim); font-size: .88rem; line-height: 1.7; }
+    .desc-section { margin-top: 1.5rem; }
+    .desc-section h3 {
+      margin: 0 0 .4rem; font-family: var(--mono);
+      color: var(--text); font-size: .75rem; letter-spacing: .1em; text-transform: uppercase;
+    }
+    .tech-tag {
+      display: inline-block; padding: .3rem .7rem; margin: .15rem;
+      border: 1px solid var(--border2); border-radius: 3px; font-size: .65rem;
+      color: var(--cyan); letter-spacing: .08em; font-family: var(--mono);
+      background: rgba(80,144,240,.05);
+    }
+    .analogy-wrap {
+      margin-top: 1rem; border-radius: 6px; overflow: hidden;
+      border: 1px solid var(--border2); background: rgba(80,144,240,.04);
+    }
+    .analogy-header { padding: .8rem 1rem; border-bottom: 1px solid var(--border); }
+    .analogy-header h4 {
+      font-family: var(--mono); font-size: .75rem; color: var(--cyan);
+      letter-spacing: .1em; text-transform: uppercase; margin-bottom: .2rem; font-weight: 700;
+    }
+    .analogy-header p { font-size: .72rem; color: var(--dim); font-family: var(--mono); }
+    
+    @media (max-width: 860px) {
+      header { padding: 1rem; flex-direction: column; gap: .75rem; }
+      .page-wrap { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="btn-back">← Retour au CV</a>
+  <h1>RESTAURATION D'IMAGES (DEHAZING)</h1>
+  <div style="width: 100px;"></div>
+</header>
+
+<div class="page-wrap">
+  <div>
+    <div class="compare-container">
+      <div class="img-clean"></div>
+      <div class="img-haze" id="haze-overlay"></div>
+      <input type="range" min="0" max="100" value="50" id="slider">
+      
+      <!-- Custom slider thumb visual -->
+      <div id="slider-line" style="position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; background: var(--cyan); pointer-events: none; box-shadow: 0 0 10px var(--cyan);">
+        <div style="position: absolute; top: 50%; left: -14px; width: 30px; height: 30px; background: var(--surface); border: 2px solid var(--cyan); border-radius: 50%; transform: translateY(-50%); display: flex; align-items: center; justify-content: center; color: var(--cyan); font-weight: bold; font-size: 10px;">◀▶</div>
+      </div>
+    </div>
+    
+    <div style="display: flex; justify-content: space-between; margin-top: 5px; font-family: var(--mono); font-size: 0.7rem; color: var(--dim);">
+      <span>IMAGE RESTAURÉE (Algorithme appliqué)</span>
+      <span>IMAGE BRUTE (Voile atmosphérique)</span>
+    </div>
+
+    <div class="metrics-box">
+      <div class="metric">
+        <span id="t-map">0.42</span>
+        Carte de transmission (t)
+      </div>
+      <div class="metric">
+        <span id="a-light">0.85</span>
+        Lumière atmosphérique (A)
+      </div>
+      <div class="metric">
+        <span style="color:#2ecc71">+40%</span>
+        Récupération du contraste
+      </div>
+    </div>
+  </div>
+
+  <div class="info-panel">
+    <h2>Le Modèle Optique de Formation du Brouillard</h2>
+    <p>Ce projet s'attaque à la problématique de la dégradation visuelle induite par les particules en suspension (brouillard, fumée). L'image reçue par la caméra est la somme du signal lumineux direct atténué par la distance, et de la lumière ambiante dispersée (voile atmosphérique).</p>
+    
+    <div class="desc-section">
+      <h3>Le défi mathématique</h3>
+      <p>L'équation de base est : <code>I(x) = J(x)t(x) + A(1 - t(x))</code>. Récupérer l'image nette <code>J(x)</code> à partir d'une seule image <code>I(x)</code> est un problème mathématiquement mal posé (plus d'inconnues que d'équations).</p>
+    </div>
+
+    <div class="desc-section">
+      <h3>La solution algorithmique</h3>
+      <p>Implémentation d'algorithmes (Dark Channel Prior / Réseaux de neurones) permettant d'estimer avec précision la matrice de transmission <code>t(x)</code> (la carte de profondeur) et la lumière globale <code>A</code>, afin d'inverser l'équation et de restaurer le signal d'origine de manière déterministe.</p>
+    </div>
+
+    <div class="desc-section">
+      <h3>Stack Technologique</h3>
+      <span class="tech-tag">Python</span>
+      <span class="tech-tag">OpenCV</span>
+      <span class="tech-tag">Mathématiques Appliquées</span>
+      <span class="tech-tag">Modélisation Optique</span>
+    </div>
+    
+    <div class="desc-section">
+      <div class="analogy-wrap">
+        <div class="analogy-header">
+          <h4>🌍 APPLICABILITÉ INDUSTRIELLE</h4>
+          <p>Le traitement des phénomènes de diffusion optique (scattering) est directement lié aux technologies de pointe de l'industrie de la vision, où l'imagerie Terahertz et infrarouge sert précisément à s'affranchir des contraintes de pénétration des milieux denses.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const slider = document.getElementById('slider');
+  const hazeOverlay = document.getElementById('haze-overlay');
+  const sliderLine = document.getElementById('slider-line');
+  const tMap = document.getElementById('t-map');
+
+  slider.addEventListener('input', (e) => {
+    const val = e.target.value;
+    hazeOverlay.style.width = val + "%";
+    sliderLine.style.left = val + "%";
+    
+    // Simulate updating metrics based on slider position
+    const fakeT = 0.8 - (val / 100) * 0.5; // transmission drops as we go left
+    tMap.textContent = fakeT.toFixed(2);
+  });
+</script>
+
+</body>
+</html>

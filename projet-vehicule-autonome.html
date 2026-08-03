@@ -3,69 +3,80 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zouhir OUARAB — Véhicule Autonome</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<title>Zouhir Ouarab — Démonstrateur de perception autonome</title>
+<meta name="description" content="Projet de véhicule autonome miniature : fusion caméra + LiDAR, évitement d'obstacles et télémétrie temps réel sur Raspberry Pi.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
+  /* ── DESIGN TOKENS (identiques à l'accueil) ── */
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-  :root { --black: #050505; --white: #f5f2ee; --accent: #c8a96e; --danger: #e74c3c; --safe: #2ecc71; --warn: #e67e22; }
-
-  body {
-    background: var(--black); color: var(--white);
-    font-family: 'Space Mono', monospace; min-height: 100vh;
-    display: flex; flex-direction: column; align-items: center;
+  :root {
+    --bg:#151c2e; --surface:#1e263d; --surface2:#27314d;
+    --border:rgba(80,140,255,.12); --border2:rgba(80,140,255,.25);
+    --text:#e8ecf4; --dim:#8a95aa; --dim2:#4a5570;
+    --cyan:#5090f0; --green:#70b8e8; --accent:#c8a96e;
+    --danger:#e74c3c; --safe:#2ecc71; --warn:#e67e22;
+    --sans:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',monospace;
   }
-
+  img { display: block; max-width: 100%; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: var(--sans); min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center;
+    -webkit-font-smoothing: antialiased;
+  }
   header {
     width: 100%; padding: 1.5rem 2rem;
     display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid var(--border);
+    background: rgba(21,28,46,.95); backdrop-filter: blur(12px);
+    position: sticky; top: 0; z-index: 50;
   }
   a.btn-back {
-    color: var(--accent); text-decoration: none; border: 1px solid var(--accent);
-    padding: .5rem 1.2rem; font-size: .75rem; text-transform: uppercase;
-    letter-spacing: .12em; transition: .3s;
+    color: var(--cyan); text-decoration: none; border: 1px solid var(--border2);
+    padding: .5rem 1.2rem; font-family: var(--mono); font-size: .75rem;
+    text-transform: uppercase; letter-spacing: .12em; transition: .3s;
   }
-  a.btn-back:hover { background: var(--accent); color: var(--black); }
+  a.btn-back:hover { background: var(--cyan); color: var(--bg); }
   .page-title {
-    font-family: 'Bebas Neue', sans-serif; letter-spacing: .1em;
-    font-size: 1.1rem; color: var(--accent); text-align: center;
+    font-family: var(--mono); letter-spacing: .06em;
+    font-size: .85rem; color: var(--dim); text-align: center; text-transform: uppercase;
   }
-
-  /* ── MAIN LAYOUT ── */
+  /* ── LAYOUT ── */
   .main-grid {
     display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
-    width: 95%; max-width: 1200px; padding: 1rem 0 3rem;
+    width: 95%; max-width: 1200px; padding: 2rem 0 3rem;
   }
   @media (max-width: 900px) { .main-grid { grid-template-columns: 1fr; } }
-
   .panel {
-    background: rgba(255,255,255,.03); border: 1px solid rgba(200,169,110,.15);
-    border-radius: 8px; padding: 1.5rem; backdrop-filter: blur(8px);
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 1.5rem;
   }
   .panel h2 {
-    font-family: 'Bebas Neue', sans-serif; color: var(--accent);
-    font-size: 1.3rem; letter-spacing: .06em; margin-bottom: .8rem;
+    font-family: var(--mono); color: var(--cyan);
+    font-size: .9rem; letter-spacing: .1em; margin-bottom: .8rem;
+    text-transform: uppercase; font-weight: 700;
   }
-  .panel p { color: #999; font-size: .82rem; line-height: 1.6; }
-
-  /* ── CANVAS PANELS ── */
+  .panel p { color: var(--dim); font-size: .88rem; line-height: 1.7; }
+  /* ── CANVAS ── */
   .canvas-box {
-    position: relative; border: 1px solid #222; border-radius: 6px;
+    position: relative; border: 1px solid var(--border); border-radius: 6px;
     overflow: hidden; background: #0a0a0a;
   }
   .canvas-box canvas { display: block; width: 100%; height: auto; }
   .canvas-label {
     position: absolute; top: 8px; left: 10px;
     font-size: .55rem; color: rgba(255,255,255,.35); letter-spacing: .12em; text-transform: uppercase;
+    font-family: var(--mono);
   }
-
-  /* ── TELEMETRY ── */
+  /* ── TÉLÉMÉTRIE ── */
   .tele-row {
     display: flex; justify-content: space-between; align-items: center;
-    padding: .7rem 0; border-bottom: 1px solid #1a1a1a; font-size: .8rem;
+    padding: .7rem 0; border-bottom: 1px solid var(--border); font-size: .82rem;
+    font-family: var(--mono);
   }
   .tele-row:last-child { border: none; }
-  .tele-val { color: var(--accent); font-weight: 700; }
-
+  .tele-val { color: var(--cyan); font-weight: 700; }
   .indicator {
     display: inline-block; width: 8px; height: 8px; border-radius: 50%;
     margin-right: 6px; vertical-align: middle;
@@ -73,49 +84,50 @@
   .ind-safe { background: var(--safe); box-shadow: 0 0 8px var(--safe); }
   .ind-warn { background: var(--warn); box-shadow: 0 0 8px var(--warn); }
   .ind-danger { background: var(--danger); box-shadow: 0 0 8px var(--danger); }
-
   /* ── OPENCV HUD ── */
   .cv-hud {
     position: relative; background: #080808;
-    border: 1px solid #222; border-radius: 6px; overflow: hidden;
+    border: 1px solid var(--border); border-radius: 6px; overflow: hidden;
     height: 260px;
   }
   .cv-hud canvas { display: block; width: 100%; height: 100%; }
   .cv-label {
     position: absolute; top: 8px; left: 10px;
     font-size: .55rem; color: rgba(255,255,255,.35); letter-spacing: .12em; text-transform: uppercase;
+    font-family: var(--mono);
   }
   .cv-fps {
     position: absolute; bottom: 8px; left: 10px;
-    font-size: .55rem; color: var(--safe); letter-spacing: .1em;
+    font-size: .55rem; color: var(--safe); letter-spacing: .1em; font-family: var(--mono);
   }
-
   .desc-section { margin-top: 1.2rem; }
   .desc-section h3 {
-    font-family: 'Bebas Neue', sans-serif; font-size: 1rem;
-    color: var(--white); letter-spacing: .06em; margin-bottom: .5rem;
+    font-family: var(--mono); font-size: .75rem;
+    color: var(--text); letter-spacing: .1em; margin-bottom: .5rem; text-transform: uppercase;
   }
-  .desc-section p { color: #777; font-size: .78rem; line-height: 1.6; }
+  .desc-section p { color: var(--dim); font-size: .85rem; line-height: 1.7; }
   .tech-tag {
-    display: inline-block; padding: .25rem .6rem; margin: .2rem;
-    border: 1px solid #333; border-radius: 3px; font-size: .6rem;
-    color: var(--accent); letter-spacing: .08em;
+    display: inline-block; padding: .3rem .7rem; margin: .2rem;
+    border: 1px solid var(--border2); border-radius: 3px; font-size: .65rem;
+    color: var(--cyan); letter-spacing: .08em; font-family: var(--mono);
+    background: rgba(80,144,240,.05);
   }
-  
-  .analogy-card {
-    margin-top: 1rem; padding: 1rem; border-radius: 6px;
-    background: linear-gradient(135deg, rgba(200,169,110,.1) 0%, rgba(0,0,0,.5) 100%);
-    border: 1px dashed rgba(200,169,110,.4);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    text-align: center; height: 140px; position: relative; overflow: hidden;
+  .analogy-wrap {
+    margin-top: 1rem; border-radius: 6px; overflow: hidden;
+    border: 1px solid var(--border2); background: rgba(80,144,240,.04);
   }
-  .analogy-title {
-    font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; color: var(--accent);
-    letter-spacing: .08em; z-index: 2; margin-bottom: .5rem;
+  .analogy-header { padding: .8rem 1rem; border-bottom: 1px solid var(--border); }
+  .analogy-header h4 {
+    font-family: var(--mono); font-size: .75rem; color: var(--cyan);
+    letter-spacing: .1em; text-transform: uppercase; margin-bottom: .2rem; font-weight: 700;
   }
-  .analogy-desc {
-    font-family: 'Space Mono', monospace; font-size: .65rem; color: #aaa;
-    max-width: 90%; z-index: 2;
+  .analogy-header p { font-size: .72rem; color: var(--dim); font-family: var(--mono); }
+  .analogy-wrap img { width: 100%; display: block; }
+  @media (max-width: 700px) {
+    header { padding: 1rem; flex-direction: column; gap: .8rem; }
+    .page-title { font-size: .75rem; }
+    .main-grid { width: 100%; padding: 0 1rem 2rem; }
+    .panel { padding: 1.2rem; }
   }
 </style>
 </head>
@@ -123,7 +135,7 @@
 
 <header>
   <a href="index.html" class="btn-back">← Retour au CV</a>
-  <span class="page-title">VÉHICULE AUTONOME — RASPBERRY PI + LIDAR + IA</span>
+  <span class="page-title">PERCEPTION AUTONOME — RASPBERRY PI / LIDAR / OPENCV</span>
   <div style="width:120px"></div>
 </header>
 
@@ -136,10 +148,10 @@
       <canvas id="roadSim" width="560" height="500"></canvas>
     </div>
     <div class="panel">
-      <h2>Télémétrie</h2>
-      <div class="tele-row"><span>Statut IA</span><span class="tele-val" id="t-state"><span class="indicator ind-safe"></span>NAVIGATION</span></div>
-      <div class="tele-row"><span>Distance Obstacle</span><span class="tele-val" id="t-dist">—</span></div>
-      <div class="tele-row"><span>Action</span><span class="tele-val" id="t-action">MAINTIEN VOIE</span></div>
+      <h2>En direct</h2>
+      <div class="tele-row"><span>Statut</span><span class="tele-val" id="t-state"><span class="indicator ind-safe"></span>ROULE</span></div>
+      <div class="tele-row"><span>Obstacle à</span><span class="tele-val" id="t-dist">—</span></div>
+      <div class="tele-row"><span>Action</span><span class="tele-val" id="t-action">TOUT DROIT</span></div>
       <div class="tele-row"><span>Vitesse</span><span class="tele-val" id="t-speed">60 km/h</span></div>
     </div>
   </div>
@@ -147,30 +159,35 @@
   <!-- RIGHT: OPENCV CAMERA + DETAILS -->
   <div style="display:flex; flex-direction:column; gap:1.2rem;">
     <div class="cv-hud">
-      <span class="cv-label">Caméra Embarquée — OpenCV / YOLOv8</span>
+      <span class="cv-label">Caméra Embarquée — OpenCV / Détection HSV</span>
       <canvas id="cvCam" width="560" height="260"></canvas>
-      <span class="cv-fps">FPS: 60 | YOLOv8-Nano | Raspberry Pi 5</span>
+      <span class="cv-fps">FPS: 25 | Algo HSV Déterministe | Raspberry Pi</span>
     </div>
     <div class="panel">
-      <h2>Détails du Projet</h2>
-      <p>Conception d'un système de perception et de navigation autonome sur Raspberry Pi. Le véhicule utilise un LIDAR 360° pour la détection d'obstacles et une caméra traitée par OpenCV + YOLOv8 pour la classification.</p>
+      <h2>Description du Système</h2>
+      <p>Conception et implémentation d'une plateforme robotique mobile sur architecture Raspberry Pi. La navigation repose sur un algorithme déterministe de détection de voie par conversion colorimétrique HSV à 25 fps, couplé à un régulateur PID pour le braquage. En parallèle, YOLOv8 est utilisé ponctuellement pour classifier le type d'obstacle détecté et le signaler aux autres utilisateurs du système.</p>
       <div class="desc-section">
-        <h3>Technologies</h3>
-        <span class="tech-tag">Raspberry Pi 5</span>
-        <span class="tech-tag">Python</span>
-        <span class="tech-tag">OpenCV</span>
-        <span class="tech-tag">YOLOv8</span>
-        <span class="tech-tag">RPLidar A1</span>
-        <span class="tech-tag">ROS2</span>
-        <span class="tech-tag">PWM Motor</span>
+        <h3>Compétences démontrées</h3>
+        <p>Intégration matérielle multicapteurs, compromis performance/fiabilité sur système embarqué contraint, implémentation d'algorithmes de traitement d'image déterministes, régulation PID et mise en place d'une interface de télémétrie dynamique.</p>
       </div>
       <div class="desc-section">
-        <h3>Utilité dans la Vie Réelle</h3>
-        <p>Ce système est le fondement de la conduite autonome : un véhicule qui perçoit son environnement et prend des décisions en temps réel sans intervention humaine. Ce type de capteur et d'algorithme est utilisé par Tesla, Waymo, et dans les drones de livraison.</p>
-
-        <div class="analogy-card">
-          <div class="analogy-title">🌆 ANALOGIE : FULL SELF-DRIVING (FSD)</div>
-          <div class="analogy-desc">Superposition de Bounding Boxes LiDAR/Vision dans l'habitacle d'un véhicule autonome urbain.<br><br><i>[Emplacement libre pour insérer votre photo HD de système autonome]</i></div>
+        <h3>Stack Technologique</h3>
+        <span class="tech-tag">Raspberry Pi</span>
+        <span class="tech-tag">Python 3</span>
+        <span class="tech-tag">OpenCV (HSV)</span>
+        <span class="tech-tag">YOLOv8 (classification)</span>
+        <span class="tech-tag">LiDAR 2D</span>
+        <span class="tech-tag">Régulateur PID</span>
+      </div>
+      <div class="desc-section">
+        <h3>Application industrielle</h3>
+        <p>Les algorithmes de fusion sensorielle et d'inférence en périphérie (Edge AI) constituent la brique fondamentale des systèmes d'aide à la conduite (ADAS), de la robotique logistique (AGV) et des drones autonomes.</p>
+        <div class="analogy-wrap">
+          <div class="analogy-header">
+            <h4>🚗 ANALOGIE — Perception ADAS urbaine</h4>
+            <p>Détection d'objets et décision temps réel sur véhicule autonome — même chaîne d'inférence.</p>
+          </div>
+          <img src="auto_detec.png" alt="Détection d'objets YOLO sur véhicule autonome urbain">
         </div>
       </div>
     </div>

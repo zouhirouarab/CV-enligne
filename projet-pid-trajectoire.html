@@ -3,110 +3,121 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zouhir OUARAB — Régulateur PID Trajectoire</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<title>Zouhir Ouarab — Asservissement PID embarqué</title>
+<meta name="description" content="Projet de suivi de ligne embarqué : capteurs infrarouges, régulateur PID en C sur Arduino et visualisation de la correction en temps réel.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
+  /* ── DESIGN TOKENS (identiques à l'accueil) ── */
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-  :root { --black: #050505; --white: #f5f2ee; --accent: #c8a96e; }
-
-  body {
-    background: var(--black); color: var(--white);
-    font-family: 'Space Mono', monospace; min-height: 100vh;
-    display: flex; flex-direction: column; align-items: center;
+  :root {
+    --bg:#151c2e; --surface:#1e263d; --surface2:#27314d;
+    --border:rgba(80,140,255,.12); --border2:rgba(80,140,255,.25);
+    --text:#e8ecf4; --dim:#8a95aa; --dim2:#4a5570;
+    --cyan:#5090f0; --green:#70b8e8; --accent:#c8a96e;
+    --danger:#e74c3c; --safe:#2ecc71;
+    --sans:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',monospace;
   }
-
+  img { display: block; max-width: 100%; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: var(--sans); min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center;
+    -webkit-font-smoothing: antialiased;
+  }
   header {
     width: 100%; padding: 1.5rem 2rem;
     display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid var(--border);
+    background: rgba(21,28,46,.95); backdrop-filter: blur(12px);
+    position: sticky; top: 0; z-index: 50;
   }
   a.btn-back {
-    color: var(--accent); text-decoration: none; border: 1px solid var(--accent);
-    padding: .5rem 1.2rem; font-size: .75rem; text-transform: uppercase;
-    letter-spacing: .12em; transition: .3s;
+    color: var(--cyan); text-decoration: none; border: 1px solid var(--border2);
+    padding: .5rem 1.2rem; font-family: var(--mono); font-size: .75rem;
+    text-transform: uppercase; letter-spacing: .12em; transition: .3s;
   }
-  a.btn-back:hover { background: var(--accent); color: var(--black); }
+  a.btn-back:hover { background: var(--cyan); color: var(--bg); }
   .page-title {
-    font-family: 'Bebas Neue', sans-serif; letter-spacing: .1em;
-    font-size: 1.1rem; color: var(--accent); text-align: center;
+    font-family: var(--mono); letter-spacing: .06em;
+    font-size: .85rem; color: var(--dim); text-align: center; text-transform: uppercase;
   }
-
   .main-grid {
     display: grid; grid-template-columns: 1.2fr 1fr; gap: 1.5rem;
-    width: 95%; max-width: 1200px; padding: 1rem 0 3rem;
+    width: 95%; max-width: 1200px; padding: 2rem 0 3rem;
   }
   @media (max-width: 900px) { .main-grid { grid-template-columns: 1fr; } }
-
   .panel {
-    background: rgba(255,255,255,.03); border: 1px solid rgba(200,169,110,.15);
-    border-radius: 8px; padding: 1.5rem; backdrop-filter: blur(8px);
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 1.5rem;
   }
   .panel h2 {
-    font-family: 'Bebas Neue', sans-serif; color: var(--accent);
-    font-size: 1.3rem; letter-spacing: .06em; margin-bottom: .8rem;
+    font-family: var(--mono); color: var(--cyan);
+    font-size: .9rem; letter-spacing: .1em; margin-bottom: .8rem;
+    text-transform: uppercase; font-weight: 700;
   }
-  .panel p { color: #999; font-size: .82rem; line-height: 1.6; }
-
+  .panel p { color: var(--dim); font-size: .88rem; line-height: 1.75; }
   .canvas-box {
-    position: relative; border: 1px solid #222; border-radius: 6px;
+    position: relative; border: 1px solid var(--border); border-radius: 6px;
     overflow: hidden; background: #f5f2ee;
   }
   .canvas-box canvas { display: block; width: 100%; height: auto; }
   .canvas-label {
     position: absolute; top: 8px; left: 10px;
     font-size: .55rem; color: rgba(0,0,0,.3); letter-spacing: .12em; text-transform: uppercase;
-    z-index: 2;
+    z-index: 2; font-family: var(--mono);
   }
-
   .chart-box {
-    border: 1px solid #222; border-radius: 6px; overflow: hidden;
-    background: #0a0a0a; position: relative; height: 130px;
+    border: 1px solid var(--border); border-radius: 6px; overflow: hidden;
+    background: var(--surface2); position: relative; height: 130px;
   }
   .chart-box canvas { display: block; width: 100%; height: 100%; }
   .chart-zero {
     position: absolute; top: 50%; left: 0; right: 0;
-    height: 1px; background: #333; z-index: 1;
+    height: 1px; background: var(--border2); z-index: 1;
   }
   .chart-label {
-    text-align: center; font-size: .6rem; color: var(--accent);
-    letter-spacing: .15em; text-transform: uppercase; margin-top: .5rem;
+    text-align: center; font-size: .6rem; color: var(--green);
+    letter-spacing: .12em; text-transform: uppercase; margin-top: .5rem;
+    font-family: var(--mono);
   }
-
   .btn-perturb {
     width: 100%; padding: 1rem; margin: 1.2rem 0;
-    background: transparent; border: 2px solid #e74c3c; color: #e74c3c;
-    font-family: 'Space Mono', monospace; font-size: .85rem; font-weight: 700;
+    background: transparent; border: 1px solid var(--danger); color: var(--danger);
+    font-family: var(--mono); font-size: .8rem; font-weight: 600;
     text-transform: uppercase; letter-spacing: .1em; cursor: pointer;
     transition: .3s; border-radius: 4px;
   }
-  .btn-perturb:hover { background: #e74c3c; color: #fff; }
+  .btn-perturb:hover { background: var(--danger); color: #fff; }
   .btn-perturb:active { transform: scale(.97); }
-
   .tech-tag {
-    display: inline-block; padding: .25rem .6rem; margin: .15rem;
-    border: 1px solid #333; border-radius: 3px; font-size: .6rem;
-    color: var(--accent); letter-spacing: .08em;
+    display: inline-block; padding: .3rem .7rem; margin: .2rem;
+    border: 1px solid var(--border2); border-radius: 3px; font-size: .65rem;
+    color: var(--cyan); letter-spacing: .08em; font-family: var(--mono);
+    background: rgba(80,144,240,.05);
   }
-  .desc-section { margin-top: 1rem; }
+  .desc-section { margin-top: 1.2rem; }
   .desc-section h3 {
-    font-family: 'Bebas Neue', sans-serif; font-size: 1rem;
-    color: var(--white); letter-spacing: .06em; margin-bottom: .4rem;
+    font-family: var(--mono); font-size: .75rem;
+    color: var(--text); letter-spacing: .1em; margin-bottom: .5rem; text-transform: uppercase;
   }
-  .desc-section p { color: #777; font-size: .78rem; line-height: 1.6; }
-
-  .analogy-card {
-    margin-top: 1rem; padding: 1rem; border-radius: 6px;
-    background: linear-gradient(135deg, rgba(200,169,110,.1) 0%, rgba(0,0,0,.5) 100%);
-    border: 1px dashed rgba(200,169,110,.4);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    text-align: center; height: 140px; position: relative; overflow: hidden;
+  .desc-section p { color: var(--dim); font-size: .85rem; line-height: 1.7; }
+  .analogy-wrap {
+    margin-top: 1rem; border-radius: 6px; overflow: hidden;
+    border: 1px solid var(--border2); background: rgba(80,144,240,.04);
   }
-  .analogy-title {
-    font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; color: var(--accent);
-    letter-spacing: .08em; z-index: 2; margin-bottom: .5rem;
+  .analogy-header { padding: .8rem 1rem; border-bottom: 1px solid var(--border); }
+  .analogy-header h4 {
+    font-family: var(--mono); font-size: .75rem; color: var(--cyan);
+    letter-spacing: .1em; text-transform: uppercase; margin-bottom: .2rem; font-weight: 700;
   }
-  .analogy-desc {
-    font-family: 'Space Mono', monospace; font-size: .65rem; color: #aaa;
-    max-width: 90%; z-index: 2;
+  .analogy-header p { font-size: .72rem; color: var(--dim); font-family: var(--mono); }
+  .analogy-wrap img { width: 100%; display: block; }
+  @media (max-width: 700px) {
+    header { padding: 1rem; flex-direction: column; gap: .8rem; }
+    .page-title { font-size: .75rem; }
+    .main-grid { width: 100%; padding: 0 1rem 2rem; }
+    .panel { padding: 1.2rem; }
   }
 </style>
 </head>
@@ -114,7 +125,7 @@
 
 <header>
   <a href="index.html" class="btn-back">← Retour au CV</a>
-  <span class="page-title">RÉGULATEUR PID — ARDUINO / SUIVI DE LIGNE</span>
+  <span class="page-title">LE SUIVEUR DE LIGNE — ARDUINO / PID</span>
   <div style="width:120px"></div>
 </header>
 
@@ -136,15 +147,19 @@
   <!-- RIGHT: CONTROLS + DETAILS -->
   <div style="display:flex; flex-direction:column; gap:1rem;">
     <div class="panel">
-      <h2>Détails du Système</h2>
-      <p>Ce véhicule suit une trajectoire (ligne noire) en temps réel grâce à un tableau de capteurs infrarouges connectés à un Arduino. L'algorithme PID corrige en permanence l'écart entre le robot et la consigne.</p>
+      <h2>Détails de l'Asservissement</h2>
+      <p>Ce démonstrateur illustre le fonctionnement d'une boucle fermée de régulation : l'écart avec la trajectoire idéale est mesuré via un réseau de capteurs infrarouges, dont le signal est traité par un régulateur PID embarqué afin de générer une commande de correction moteur continue.</p>
       
-      <button class="btn-perturb" id="btn-perturb">⚠️ Perturber la Trajectoire</button>
+      <button class="btn-perturb" id="btn-perturb">⚠️ Injecter une perturbation</button>
       <p style="font-size:.72rem; color:#666; line-height:1.5;">
-        <em>Simule un choc latéral (nid de poule, vent). Observez la correction rapide et la stabilisation sur le graphe.</em>
+        <em>Simule un écart transversal brutal (dérive latérale) pour observer en temps réel le travail d'amortissement et le temps d'établissement (réponse indicielle) du régulateur sur le tracé de l'erreur.</em>
       </p>
     </div>
     <div class="panel">
+      <div class="desc-section">
+        <h3>Compétences démontrées</h3>
+        <p>Validation de méthodes d'instrumentation analogique, synthétisation de lois de commande, compréhension approfondie des perturbations système, et capacité à instrumenter une boucle de validation visuelle.</p>
+      </div>
       <div class="desc-section">
         <h3>Technologies</h3>
         <span class="tech-tag">Arduino Uno</span>
@@ -154,13 +169,15 @@
         <span class="tech-tag">PWM</span>
       </div>
       <div class="desc-section" style="margin-top:1.2rem;">
-        <h3>Utilité dans la vie réelle</h3>
-        <p>Le suivi de ligne est la brique fondamentale de la robotique industrielle : AGV dans les entrepôts Amazon, robots de chaîne de montage. Le PID est l'algorithme de régulation le plus utilisé au monde (90% des systèmes industriels).</p>
+        <h3>Application industrielle</h3>
+        <p>Le contrôle de trajectoire par asservissement est au cœur des systèmes logistiques tels que les véhicules à guidage automatique (AGV), de la robotique mobile industrielle et des systèmes de guidage avancés type Lane Keeping Assist (LKA). Cette architecture de base reste incontournable pour garantir stabilité et robustesse face aux environnements non-maîtrisés.</p>
         
-        <div class="analogy-card" style="padding:0; border:none; background:transparent; height:auto;">
-          <h4 style="font-family:'Bebas Neue',sans-serif; color:var(--accent); font-size:1.1rem; margin-bottom:0.5rem; letter-spacing:0.08em; text-align:center;">🚘 ANALOGIE : LSA / LANE KEEPING ASSIST</h4>
-          <p style="font-size:0.75rem; color:#aaa; text-align:center; margin-bottom:1rem;">Vision autoroute temps-réel</p>
-          <img src="analogie-lka.jpg" alt="Lane Keeping Assist Proxy" style="width:100%; border-radius:6px; border:1px solid #333;">
+        <div class="analogy-wrap">
+          <div class="analogy-header">
+            <h4>🚘 ANALOGIE — LKA / Lane Keeping Assist</h4>
+            <p>Système de maintien de voie en temps réel — analogie directe avec le projet embarqué.</p>
+          </div>
+          <img src="analogie-lka.jpg" alt="Lane Keeping Assist - système ADAS">
         </div>
       </div>
     </div>

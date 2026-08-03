@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zouhir Ouarab — Ingénieur Systèmes Intelligents & Embarqué</title>
-<meta name="description" content="Portfolio de Zouhir Ouarab — Ingénieur Systèmes Intelligents, IA embarquée, Vision & Électronique. Master 2 EEEA.">
+<title>Zouhir Ouarab | Stage & Alternance ingénieur embarqué, IA & robotique — Disponible sept. 2026</title>
+<meta name="description" content="Zouhir Ouarab — M2 Électronique, Automatique & IA embarquée (Paris-Saclay). Recherche stage ou alternance ingénieur dès septembre 2026 partout en France. Systèmes embarqués, robotique, perception IA.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -12,13 +12,13 @@
 /*──── RESET & TOKENS ────*/
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#030508;--surface:#080c12;--surface2:#0d1219;
-  --border:rgba(0,240,255,.08);--border2:rgba(0,240,255,.15);
-  --text:#e8ecf0;--dim:#6b7a8d;--dim2:#3a4a5c;
-  --cyan:#00e5ff;--green:#00ff88;--purple:#a855f7;
-  --glow:rgba(0,229,255,.15);--glow2:rgba(0,255,136,.1);
-  --grad:linear-gradient(135deg,var(--cyan),var(--green));
-  --grad2:linear-gradient(135deg,var(--cyan),var(--purple));
+  --bg:#111315;--surface:#1c1f24;--surface2:#2b2f36;
+  --border:rgba(255,159,28,.15);--border2:rgba(255,159,28,.3);
+  --text:#f0f2f5;--dim:#8b949e;--dim2:#484f58;
+  --cyan:#ff9f1c;--green:#e0e3e6;--purple:#e85d04;
+  --glow:rgba(255,159,28,.15);--glow2:rgba(232,93,4,.1);
+  --grad:linear-gradient(135deg,var(--cyan),var(--purple));
+  --grad2:linear-gradient(135deg,var(--cyan),var(--green));
   --sans:'Inter',system-ui,sans-serif;
   --mono:'JetBrains Mono',monospace;
   --ease:cubic-bezier(.16,1,.3,1);
@@ -31,24 +31,26 @@ html{scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:var(--dim2) var
 body{font-family:var(--sans);background:var(--bg);color:var(--text);overflow-x:hidden;cursor:none;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}
 img{display:block;max-width:100%}
-::selection{background:rgba(0,229,255,.25);color:#fff}
+::selection{background:rgba(80,144,240,.3);color:#fff}
+a:focus-visible,button:focus-visible{outline:2px solid var(--cyan);outline-offset:4px}
 
 /*──── CURSOR ────*/
 .cur{position:fixed;top:0;left:0;pointer-events:none;z-index:9999;mix-blend-mode:screen}
 .cur-dot{width:6px;height:6px;background:var(--cyan);border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 12px var(--cyan)}
-.cur-ring{width:44px;height:44px;border:1.5px solid rgba(0,229,255,.4);border-radius:50%;transform:translate(-50%,-50%);transition:width .25s var(--ease),height .25s var(--ease),border-color .3s,background .3s}
-.cur-ring.hover{width:72px;height:72px;border-color:var(--cyan);background:rgba(0,229,255,.06)}
+.cur-ring{width:44px;height:44px;border:1.5px solid rgba(80,144,240,.4);border-radius:50%;transform:translate(-50%,-50%);transition:width .25s var(--ease),height .25s var(--ease),border-color .3s,background .3s}
+.cur-ring.hover{width:72px;height:72px;border-color:var(--cyan);background:rgba(80,144,240,.08)}
 
 /*──── CANVAS BG ────*/
 #particles{position:fixed;inset:0;z-index:0;opacity:.6}
 .noise{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E")}
-.glow-orb{position:fixed;width:600px;height:600px;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;opacity:.12}
-.glow-orb.a{top:-15%;left:-10%;background:var(--cyan)}
-.glow-orb.b{bottom:-20%;right:-10%;background:var(--green)}
+.glow-orb{position:fixed;width:800px;height:800px;border-radius:50%;filter:blur(150px);pointer-events:none;z-index:0;opacity:.15;animation:float 20s infinite ease-in-out}
+.glow-orb.a{top:-20%;left:-10%;background:var(--cyan);animation-delay:0s}
+.glow-orb.b{bottom:-25%;right:-10%;background:var(--purple);animation-delay:-5s;width:900px;height:900px}
+@keyframes float{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(5%,10%) scale(1.1)}66%{transform:translate(-5%,15%) scale(0.9)}}
 
 /*──── NAV ────*/
 nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 3rem;display:flex;align-items:center;justify-content:space-between;transition:background .4s,backdrop-filter .4s,padding .3s}
-nav.scrolled{background:rgba(3,5,8,.85);backdrop-filter:blur(20px);padding:1rem 3rem;border-bottom:1px solid var(--border)}
+nav.scrolled{background:rgba(21,28,46,.92);backdrop-filter:blur(20px);padding:1rem 3rem;border-bottom:1px solid var(--border)}
 .nav-logo{font-family:var(--mono);font-weight:700;font-size:1.1rem;letter-spacing:-.02em;color:var(--text)}
 .nav-logo span{color:var(--cyan)}
 .nav-links{display:flex;gap:2.5rem;list-style:none}
@@ -61,7 +63,7 @@ nav.scrolled{background:rgba(3,5,8,.85);backdrop-filter:blur(20px);padding:1rem 
 .burger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
 .burger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
 .burger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
-.mob-drawer{position:fixed;inset:0;z-index:150;background:rgba(3,5,8,.96);backdrop-filter:blur(30px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem;opacity:0;pointer-events:none;transition:opacity .4s}
+.mob-drawer{position:fixed;inset:0;z-index:150;background:rgba(21,28,46,.96);backdrop-filter:blur(30px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem;opacity:0;pointer-events:none;transition:opacity .4s}
 .mob-drawer.open{opacity:1;pointer-events:all}
 .mob-drawer a{font-family:var(--mono);font-size:1.8rem;font-weight:700;letter-spacing:.05em;color:var(--text);transition:color .3s}
 .mob-drawer a:hover{color:var(--cyan)}
@@ -69,8 +71,7 @@ nav.scrolled{background:rgba(3,5,8,.85);backdrop-filter:blur(20px);padding:1rem 
 /*──── LAYOUT ────*/
 .container{max-width:1140px;margin:0 auto;padding:0 2rem}
 section{position:relative;z-index:2;padding:9rem 0}
-.sec-tag{font-family:var(--mono);font-size:.8rem;color:var(--cyan);letter-spacing:.15em;text-transform:uppercase;margin-bottom:1.2rem;display:flex;align-items:center;gap:.8rem}
-.sec-tag::before{content:'';width:30px;height:1px;background:var(--cyan)}
+.sec-tag{font-family:var(--mono);font-size:.8rem;color:var(--cyan);letter-spacing:.15em;text-transform:uppercase;margin-bottom:1.2rem}
 .sec-title{font-size:clamp(2.2rem,5vw,3.6rem);font-weight:800;letter-spacing:-.03em;line-height:1.1;margin-bottom:1.5rem}
 .sec-desc{font-size:1.1rem;color:var(--dim);max-width:550px;line-height:1.7}
 
@@ -83,14 +84,17 @@ section{position:relative;z-index:2;padding:9rem 0}
 /*──── HERO ────*/
 #hero{min-height:100vh;display:flex;align-items:center;padding:0}
 .hero-inner{width:100%}
-.hero-badge{display:inline-flex;align-items:center;gap:.7rem;padding:.55rem 1.2rem;border:1px solid var(--border2);border-radius:100px;font-family:var(--mono);font-size:.78rem;color:var(--cyan);margin-bottom:2.5rem;background:rgba(0,229,255,.03)}
+.hero-badge{display:inline-flex;align-items:center;gap:.7rem;padding:.55rem 1.2rem;border:1px solid var(--border2);border-radius:100px;font-family:var(--mono);font-size:.78rem;color:var(--cyan);margin-bottom:2.5rem;background:rgba(80,144,240,.05)}
 .hero-pulse{width:8px;height:8px;background:var(--cyan);border-radius:50%;box-shadow:0 0 10px var(--cyan);animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(0,229,255,.4)}50%{box-shadow:0 0 0 10px rgba(0,229,255,0)}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(80,144,240,.4)}50%{box-shadow:0 0 0 10px rgba(80,144,240,0)}}
 .hero-title{font-size:clamp(3rem,8vw,6.5rem);font-weight:900;letter-spacing:-.04em;line-height:.95;margin-bottom:2rem}
 .hero-title .accent{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-kicker{font-family:var(--mono);font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--green);margin-bottom:1rem}
 .hero-sub{font-size:clamp(1rem,2vw,1.35rem);color:var(--dim);max-width:580px;line-height:1.8;margin-bottom:3.5rem}
 .hero-sub em{color:var(--text);font-style:normal;font-weight:500}
 .hero-btns{display:flex;gap:1.2rem;flex-wrap:wrap}
+.hero-highlights{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:1.6rem}
+.hero-chip{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;padding:.55rem .9rem;border:1px solid var(--border);background:rgba(80,144,240,.04);color:var(--dim)}
 .btn{display:inline-flex;align-items:center;gap:.6rem;font-family:var(--mono);font-size:.82rem;letter-spacing:.06em;text-transform:uppercase;padding:1rem 2.2rem;border:1px solid var(--border2);background:transparent;color:var(--text);position:relative;overflow:hidden;transition:color .4s,border-color .4s;cursor:none}
 .btn::before{content:'';position:absolute;inset:0;background:var(--grad);transform:scaleX(0);transform-origin:right;transition:transform .5s var(--ease2);z-index:-1}
 .btn:hover{color:var(--bg);border-color:transparent;font-weight:700}
@@ -105,9 +109,9 @@ section{position:relative;z-index:2;padding:9rem 0}
 /*──── ABOUT ────*/
 .about-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:5rem;align-items:center}
 .about-visual{position:relative}
-.about-frame{aspect-ratio:3/4;background:var(--surface);border:1px solid var(--border);position:relative;overflow:hidden}
-.about-frame img{width:100%;height:100%;object-fit:cover;filter:grayscale(20%) brightness(.9) contrast(1.1)}
-.about-frame::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(3,5,8,.6))}
+.about-frame{aspect-ratio:3/4;background:var(--surface);border:1px solid var(--border);position:relative;overflow:hidden;max-width:340px;margin:0 auto}
+.about-frame img{width:100%;height:100%;object-fit:cover;object-position:center top;filter:none}
+.about-frame::after{content:none}
 .about-corners{position:absolute;inset:-8px;pointer-events:none}
 .about-corners::before,.about-corners::after{content:'';position:absolute;width:24px;height:24px;border:2px solid var(--cyan)}
 .about-corners::before{top:0;left:0;border-right:none;border-bottom:none}
@@ -117,25 +121,51 @@ section{position:relative;z-index:2;padding:9rem 0}
 .about-text strong{color:var(--text);font-weight:600}
 .about-text em{color:var(--cyan);font-style:normal}
 .about-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem;padding-top:2.5rem;border-top:1px solid var(--border)}
-.stat-val{font-family:var(--mono);font-size:2rem;font-weight:700;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:block}
+.stat-val{font-family:var(--mono);font-size:2rem;font-weight:700;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;display:block}
 .stat-lbl{font-family:var(--mono);font-size:.65rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-top:.3rem}
+
+/*──── DIFFERENCE ────*/
+.diff-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.diff-card{background:var(--surface);border:1px solid var(--border);padding:2rem;position:relative;overflow:hidden}
+.diff-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad)}
+.diff-num{display:block;font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;color:var(--cyan);margin-bottom:1rem}
+.diff-title{font-size:1.35rem;font-weight:700;letter-spacing:-.02em;margin-bottom:1rem}
+.diff-desc{font-size:1rem;color:var(--dim);line-height:1.75}
+
+/*──── EXPERIENCES ────*/
+#experiences{padding:9rem 0}
+.exp-timeline{position:relative;margin-top:3.5rem;padding-left:2.5rem}
+.exp-timeline::before{content:'';position:absolute;top:0;bottom:0;left:0;width:2px;background:linear-gradient(to bottom,var(--cyan),var(--purple),transparent);border-radius:2px}
+.exp-item{position:relative;margin-bottom:3rem;padding:2rem 2rem 2rem 2.5rem;background:rgba(30,38,61,.6);border:1px solid var(--border);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);transition:transform .4s var(--ease),border-color .4s,box-shadow .4s}
+.exp-item:last-child{margin-bottom:0}
+.exp-item::before{content:'';position:absolute;top:1.8rem;left:-2.95rem;width:12px;height:12px;background:var(--cyan);border-radius:50%;border:2px solid var(--bg);box-shadow:0 0 12px var(--cyan),0 0 24px rgba(80,144,240,.3);transition:box-shadow .4s}
+.exp-item:hover{transform:translateX(6px);border-color:var(--border2);box-shadow:0 8px 40px rgba(80,144,240,.08)}
+.exp-item:hover::before{box-shadow:0 0 18px var(--cyan),0 0 40px rgba(80,144,240,.5)}
+.exp-header{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:1rem}
+.exp-title-block{flex:1}
+.exp-role{font-size:1.25rem;font-weight:700;letter-spacing:-.02em;margin-bottom:.35rem;color:var(--text)}
+.exp-org{font-family:var(--mono);font-size:.78rem;color:var(--cyan);letter-spacing:.06em}
+.exp-meta{display:flex;flex-direction:column;align-items:flex-end;gap:.3rem;flex-shrink:0}
+.exp-date{font-family:var(--mono);font-size:.72rem;color:var(--green);letter-spacing:.06em;white-space:nowrap}
+.exp-location{font-family:var(--mono);font-size:.68rem;color:var(--dim);letter-spacing:.04em;white-space:nowrap}
+.exp-badge{display:inline-block;font-family:var(--mono);font-size:.65rem;padding:.25rem .65rem;border:1px solid rgba(80,144,240,.3);background:rgba(80,144,240,.06);color:var(--cyan);border-radius:2px;margin-bottom:.5rem;letter-spacing:.06em;text-transform:uppercase}
+.exp-divider{height:1px;background:var(--border);margin:.8rem 0 1rem}
+.exp-bullets{list-style:none;display:flex;flex-direction:column;gap:.6rem}
+.exp-bullets li{font-size:1rem;color:var(--dim);line-height:1.7;padding-left:1.4rem;position:relative}
+.exp-bullets li::before{content:'▸';position:absolute;left:0;color:var(--cyan);font-size:.8rem;top:.05em}
+@media(max-width:600px){.exp-timeline{padding-left:1.8rem}.exp-header{flex-direction:column}.exp-meta{align-items:flex-start}}
 
 /*──── SKILLS ────*/
 .skills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+@media(min-width:601px) and (max-width:900px){.skills-grid{grid-template-columns:repeat(2,1fr)}}
 .sk-card{background:var(--surface);border:1px solid var(--border);padding:2.5rem 2rem;position:relative;overflow:hidden;transition:transform .4s var(--ease),border-color .4s}
 .sk-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad);transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease)}
 .sk-card:hover{transform:translateY(-6px);border-color:var(--border2)}
 .sk-card:hover::before{transform:scaleX(1)}
 .sk-icon{font-size:1.8rem;margin-bottom:1.5rem;display:block}
 .sk-name{font-size:1.3rem;font-weight:700;margin-bottom:.3rem}
-.sk-sub{font-family:var(--mono);font-size:.7rem;color:var(--dim);letter-spacing:.08em;text-transform:uppercase;margin-bottom:1.8rem}
-.sk-bars{display:flex;flex-direction:column;gap:.9rem}
-.sk-bar-label{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.72rem;color:var(--dim);margin-bottom:.3rem}
-.sk-bar-track{height:3px;background:var(--surface2);border-radius:2px;overflow:hidden}
-.sk-bar-fill{height:100%;background:var(--grad);border-radius:2px;transform:scaleX(0);transform-origin:left;transition:transform 1.2s var(--ease)}
-.sk-bar-fill.vis{transform:scaleX(1)}
 .sk-tags{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.5rem}
-.sk-tag{font-family:var(--mono);font-size:.72rem;padding:.35rem .7rem;background:rgba(0,229,255,.04);border:1px solid var(--border);color:var(--dim);transition:color .3s,border-color .3s}
+.sk-tag{font-family:var(--mono);font-size:.72rem;padding:.35rem .7rem;background:rgba(80,144,240,.05);border:1px solid var(--border);color:var(--dim);transition:color .3s,border-color .3s}
 .sk-card:hover .sk-tag{border-color:var(--border2);color:var(--text)}
 
 /*──── PROJECTS ────*/
@@ -152,8 +182,9 @@ section{position:relative;z-index:2;padding:9rem 0}
 .proj-year{font-family:var(--mono);font-size:.85rem;color:var(--green);margin-bottom:.8rem;display:block}
 .proj-title{font-size:2.2rem;font-weight:800;letter-spacing:-.02em;margin-bottom:1.2rem;line-height:1.15}
 .proj-desc{font-size:1.05rem;color:var(--dim);line-height:1.75;margin-bottom:1.8rem}
+.proj-proof{font-family:var(--mono);font-size:.74rem;letter-spacing:.04em;text-transform:uppercase;color:var(--green);margin:-.4rem 0 1.6rem}
 .proj-tech{display:flex;flex-wrap:wrap;gap:.8rem;margin-bottom:2rem}
-.proj-tech span{font-family:var(--mono);font-size:.78rem;color:var(--cyan);padding:.35rem .75rem;border:1px solid var(--border);background:rgba(0,229,255,.03);transition:border-color .3s}
+.proj-tech span{font-family:var(--mono);font-size:.78rem;color:var(--cyan);padding:.35rem .75rem;border:1px solid var(--border);background:rgba(80,144,240,.04);transition:border-color .3s}
 .proj:hover .proj-tech span{border-color:var(--border2)}
 .proj-link{font-family:var(--mono);font-size:.82rem;color:var(--text);letter-spacing:.06em;text-transform:uppercase;display:inline-flex;align-items:center;gap:.5rem;transition:color .3s}
 .proj-link:hover{color:var(--cyan)}
@@ -167,6 +198,7 @@ section{position:relative;z-index:2;padding:9rem 0}
 .contact-desc{font-size:1.15rem;color:var(--dim);line-height:1.8;margin-bottom:3rem}
 .contact-email{font-family:var(--mono);font-size:1.4rem;font-weight:700;display:inline-flex;align-items:center;gap:.8rem;transition:color .3s}
 .contact-email:hover{color:var(--cyan)}
+.contact-meta{margin-top:1rem;font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--green)}
 .contact-socials{display:flex;justify-content:center;gap:2rem;margin-top:3rem;padding-top:2.5rem;border-top:1px solid var(--border)}
 .soc-link{font-family:var(--mono);font-size:.78rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;position:relative;padding-bottom:4px;transition:color .3s}
 .soc-link::after{content:'';position:absolute;bottom:0;left:0;width:100%;height:1px;background:var(--cyan);transform:scaleX(0);transform-origin:right;transition:transform .4s var(--ease)}
@@ -175,6 +207,99 @@ section{position:relative;z-index:2;padding:9rem 0}
 
 /*──── FOOTER ────*/
 footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:2rem 0;text-align:center;font-family:var(--mono);font-size:.72rem;color:var(--dim2);letter-spacing:.08em}
+.footer-reset{display:inline-block;margin-top:.8rem;font-family:var(--mono);font-size:.65rem;color:var(--dim2);letter-spacing:.08em;border:none;background:none;cursor:pointer;opacity:.4;transition:opacity .3s}
+.footer-reset:hover{opacity:1;color:var(--cyan)}
+
+/*──── LIGHT THEME ────*/
+:root.light{
+  --bg:#f0f4ff;--surface:#ffffff;--surface2:#e8eef8;
+  --border:rgba(80,120,220,.15);--border2:rgba(80,120,220,.3);
+  --text:#151c2e;--dim:#4a5570;--dim2:#8a95aa;
+  --glow:rgba(80,120,220,.1);
+}
+:root.light body{background:var(--bg);color:var(--text)}
+:root.light nav.scrolled{background:rgba(240,244,255,.95)}
+:root.light .mob-drawer{background:rgba(240,244,255,.98)}
+:root.light .exp-item{background:rgba(255,255,255,.8)}
+:root.light .sk-card,.light .diff-card,.light .contact-card{background:var(--surface)}
+:root.light #particles{opacity:.25}
+:root.light .glow-orb{opacity:.08}
+
+/*──── NAV CONTROLS (theme + lang) ────*/
+.nav-controls{display:flex;align-items:center;gap:.6rem;margin-left:1.5rem}
+.nav-ctrl-btn{font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;padding:.4rem .75rem;border:1px solid var(--border2);background:transparent;color:var(--dim);cursor:pointer;transition:color .3s,border-color .3s,background .3s;border-radius:3px}
+.nav-ctrl-btn:hover,.nav-ctrl-btn.active{color:var(--cyan);border-color:var(--cyan);background:rgba(80,144,240,.06)}
+.nav-ctrl-btn.lang-active{color:var(--green);border-color:var(--green);background:rgba(112,184,232,.06)}
+
+/*──── PROFILE MODAL ────*/
+#profile-modal{position:fixed;inset:0;z-index:5000;display:flex;align-items:center;justify-content:center;background:rgba(10,14,28,.75);backdrop-filter:blur(20px);opacity:0;pointer-events:none;transition:opacity .5s var(--ease)}
+#profile-modal.open{opacity:1;pointer-events:all}
+.pm-card{background:var(--surface);border:1px solid var(--border2);padding:3rem 2.5rem;max-width:520px;width:90%;position:relative;transform:translateY(30px) scale(.97);transition:transform .5s var(--ease)}
+#profile-modal.open .pm-card{transform:translateY(0) scale(1)}
+.pm-card::before{content:'';position:absolute;top:-1px;left:50%;transform:translateX(-50%);width:50%;height:2px;background:var(--grad)}
+.pm-greeting{font-family:var(--mono);font-size:.75rem;color:var(--cyan);letter-spacing:.14em;text-transform:uppercase;margin-bottom:.8rem}
+.pm-title{font-size:1.8rem;font-weight:800;letter-spacing:-.03em;margin-bottom:.5rem}
+.pm-sub{font-size:.95rem;color:var(--dim);line-height:1.6;margin-bottom:2rem}
+.pm-options{display:flex;flex-direction:column;gap:.9rem}
+.pm-opt{display:flex;align-items:center;gap:1.2rem;padding:1rem 1.2rem;border:1px solid var(--border);background:rgba(80,144,240,.02);cursor:pointer;transition:border-color .3s,background .3s,transform .3s var(--ease)}
+.pm-opt:hover{border-color:var(--border2);background:rgba(80,144,240,.06);transform:translateX(6px)}
+.pm-opt-icon{font-size:1.5rem;width:40px;text-align:center;flex-shrink:0}
+.pm-opt-text strong{display:block;font-size:1rem;font-weight:700;letter-spacing:-.01em;margin-bottom:.15rem}
+.pm-opt-text span{font-size:.82rem;color:var(--dim)}
+.pm-skip{display:block;text-align:center;margin-top:1.2rem;font-family:var(--mono);font-size:.72rem;color:var(--dim2);cursor:pointer;letter-spacing:.06em;transition:color .3s}
+.pm-skip:hover{color:var(--dim)}
+
+/*──── RETURN TOAST (REMOVED) ────*/
+
+/*──── ADAPTIVE INTERFACES (SILENT HIGHLIGHT) ────*/
+body[data-profile="tech"] .hl-tech,
+body[data-profile="manager"] .hl-manager,
+body[data-profile="rh"] .hl-rh {
+  font-weight: 700;
+  color: var(--cyan);
+  text-shadow: 0 0 10px rgba(80,144,240,0.4);
+  background: rgba(80,144,240,0.1);
+  border-color: rgba(80,144,240,0.4);
+}
+:root.light body[data-profile="tech"] .hl-tech,
+:root.light body[data-profile="manager"] .hl-manager,
+:root.light body[data-profile="rh"] .hl-rh {
+  color: #0b57d0;
+  background: rgba(11,87,208,0.08);
+  border-color: rgba(11,87,208,0.3);
+}
+
+/* Adaptive Content Reordering */
+.proj-list { display: flex; flex-direction: column; gap: 4rem; }
+body[data-profile="manager"] .proj[data-cat="sys"] { order: -1; }
+body[data-profile="tech"] .proj[data-cat="hw"] { order: -1; }
+
+/*──── VIVATECH MODAL & GALLERY ────*/
+.clickable-exp { cursor: pointer; transition: transform 0.3s var(--ease), border-color 0.3s, box-shadow 0.3s; position: relative; }
+.clickable-exp:hover { transform: translateY(-3px); border-color: var(--cyan); background: rgba(80,144,240,0.03); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+.clickable-exp .exp-org { display: flex; align-items: center; gap: 0.5rem; }
+.viva-logo { height: 16px; object-fit: contain; background: white; padding: 2px; border-radius: 2px; }
+.viva-hint { display: inline-block; margin-top: 1rem; font-family: var(--mono); font-size: 0.75rem; color: var(--cyan); font-weight: 700; opacity: 0.8; transition: opacity 0.3s; }
+.clickable-exp:hover .viva-hint { opacity: 1; }
+.viva-hint::after { content: " →"; }
+
+#vivatech-modal { position:fixed; inset:0; z-index:5000; display:flex; align-items:center; justify-content:center; background:rgba(10,14,28,.85); backdrop-filter:blur(10px); opacity:0; pointer-events:none; transition:opacity .4s ease; padding: 2rem; }
+#vivatech-modal.open { opacity:1; pointer-events:all; }
+.viva-content { background: var(--surface); border: 1px solid var(--border2); width: 100%; max-width: 900px; max-height: 90vh; overflow-y: auto; padding: 3rem; position: relative; transform: translateY(20px); transition: transform .4s ease; }
+#vivatech-modal.open .viva-content { transform: translateY(0); }
+.viva-close { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none; color: var(--dim); font-size: 1.5rem; cursor: pointer; transition: color 0.3s; }
+.viva-close:hover { color: var(--text); }
+.viva-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 2.5rem; }
+.viva-item { border: 1px solid var(--border); background: var(--bg); padding: 1rem; transition: transform 0.3s; }
+.viva-item:hover { transform: translateY(-5px); }
+.viva-item img { width: 100%; height: 180px; object-fit: cover; margin-bottom: 1rem; border: 1px solid var(--border2); }
+.viva-item h4 { font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--text); }
+.viva-item p { font-size: 0.85rem; color: var(--dim); line-height: 1.5; }
+
+/*──── SEEN / NOUVEAU BADGES ────*/
+.proj.seen .proj-visual::before{content:'✓ Vu';position:absolute;bottom:1rem;right:1rem;z-index:3;font-family:var(--mono);font-size:.68rem;color:var(--green);padding:.25rem .6rem;background:rgba(3,5,8,.8);border:1px solid rgba(112,184,232,.3);letter-spacing:.06em}
+.badge-new{display:inline-flex;align-items:center;gap:.4rem;font-family:var(--mono);font-size:.65rem;color:#f0b429;border:1px solid rgba(240,180,41,.4);background:rgba(240,180,41,.08);padding:.2rem .6rem;border-radius:2px;letter-spacing:.06em;text-transform:uppercase;animation:newPulse 2.5s infinite;margin-left:.6rem;vertical-align:middle}
+@keyframes newPulse{0%,100%{opacity:1}50%{opacity:.6}}
 
 /*──── MOBILE ────*/
 @media(pointer:coarse){
@@ -184,8 +309,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:2r
 @media(max-width:900px){
   .nav-links{display:none}
   .burger{display:flex}
+  .nav-controls{margin-left:.5rem}
   .about-grid{grid-template-columns:1fr;gap:3rem}
-  .about-visual{max-width:320px}
+  .about-visual{max-width:100%}
+  .diff-grid{grid-template-columns:1fr}
   .skills-grid{grid-template-columns:1fr}
   .proj,.proj:nth-child(even){grid-template-columns:1fr;direction:ltr}
 }
@@ -195,11 +322,15 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:2r
   section{padding:5rem 0}
   .container{padding:0 1.2rem}
   .hero-title{font-size:clamp(2.5rem,10vw,3.5rem)}
+  .hero-highlights{gap:.6rem}
+  .hero-chip{width:100%;text-align:center}
   .about-stats{grid-template-columns:repeat(3,1fr);gap:.8rem}
   .stat-val{font-size:1.4rem}
   .contact-card{padding:2.5rem 1.5rem}
   .contact-email{font-size:1rem}
   .contact-socials{flex-direction:column;align-items:center;gap:1rem}
+  #return-toast{bottom:1rem;right:1rem;left:1rem;max-width:none}
+  .pm-card{padding:2rem 1.4rem}
 }
 </style>
 </head>
@@ -219,33 +350,100 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:2r
 <nav id="nav">
   <a href="#" class="nav-logo">zouhir<span>.</span></a>
   <ul class="nav-links">
-    <li><a href="#about">Profil</a></li>
-    <li><a href="#skills">Compétences</a></li>
-    <li><a href="#projects">Projets</a></li>
-    <li><a href="#contact">Contact</a></li>
+    <li><a href="#about" data-i18n="nav.profil">Profil Technique</a></li>
+    <li><a href="#experiences" data-i18n="nav.exp">Expériences</a></li>
+    <li><a href="#skills" data-i18n="nav.skills">Outils</a></li>
+    <li><a href="#projects" data-i18n="nav.projects">Démonstrateurs</a></li>
+    <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
   </ul>
+  <div class="nav-controls">
+    <button class="nav-ctrl-btn" id="themeBtn" title="Changer le thème" aria-label="Toggle theme">☀️</button>
+    <button class="nav-ctrl-btn" id="langBtn" title="Switch language" aria-label="Toggle language">EN</button>
+  </div>
   <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
 <div class="mob-drawer" id="drawer">
-  <a href="#about" class="dl">Profil</a>
-  <a href="#skills" class="dl">Compétences</a>
-  <a href="#projects" class="dl">Projets</a>
-  <a href="#contact" class="dl">Contact</a>
+  <a href="#about" class="dl" data-i18n="nav.profil">Profil Technique</a>
+  <a href="#experiences" class="dl" data-i18n="nav.exp">Expériences</a>
+  <a href="#skills" class="dl" data-i18n="nav.skills">Outils</a>
+  <a href="#projects" class="dl" data-i18n="nav.projects">Démonstrateurs</a>
+  <a href="#contact" class="dl" data-i18n="nav.contact">Contact</a>
+</div>
+
+<!-- PROFILE MODAL -->
+<div id="profile-modal" role="dialog" aria-modal="true" aria-labelledby="pm-title">
+  <div class="pm-card">
+    <div class="pm-greeting" data-i18n="modal.greeting">Bienvenue 👋</div>
+    <h2 class="pm-title" id="pm-title" data-i18n="modal.title">Qui êtes-vous ?</h2>
+    <p class="pm-sub" data-i18n="modal.sub">Je vais adapter ce portfolio à votre profil pour une expérience optimale.</p>
+    <div class="pm-options">
+      <div class="pm-opt" data-profile="rh" role="button" tabindex="0">
+        <div class="pm-opt-icon">👔</div>
+        <div class="pm-opt-text"><strong data-i18n="modal.opt1.title">Recruteur / RH</strong><span data-i18n="modal.opt1.sub">Je cherche l'adéquation profil/poste et la fiabilité</span></div>
+      </div>
+      <div class="pm-opt" data-profile="manager" role="button" tabindex="0">
+        <div class="pm-opt-icon">🎯</div>
+        <div class="pm-opt-text"><strong data-i18n="modal.opt2.title">Pilote de Projet / Manager</strong><span data-i18n="modal.opt2.sub">Je cherche une vision système et le respect du CDC</span></div>
+      </div>
+      <div class="pm-opt" data-profile="tech" role="button" tabindex="0">
+        <div class="pm-opt-icon">👨‍💻</div>
+        <div class="pm-opt-text"><strong data-i18n="modal.opt3.title">Tech Lead / Ingénieur</strong><span data-i18n="modal.opt3.sub">Je m'intéresse à l'architecture logicielle et matérielle</span></div>
+      </div>
+    </div>
+    <button class="pm-skip" id="pm-skip" data-i18n="modal.skip">Continuer sans personnaliser →</button>
+  </div>
+</div>
+
+<!-- VIVATECH MODAL -->
+<div id="vivatech-modal" aria-hidden="true">
+  <div class="viva-content">
+    <button class="viva-close" id="viva-close" aria-label="Fermer">✕</button>
+    <div class="sec-tag rv" data-i18n="viva.modal.tag">Immersion Technologique</div>
+    <h2 class="pm-title" data-i18n="viva.modal.title">Galerie VivaTech 2026</h2>
+    <p class="pm-sub" data-i18n="viva.modal.sub">Découverte des dernières innovations en robotique, IA et systèmes embarqués lors du plus grand salon européen de la tech.</p>
+    
+    <div class="viva-grid">
+      <!-- Item 1 -->
+      <div class="viva-item">
+        <img src="viva_badge_vt.png" alt="Tech Up - VivaTech" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiMxYTFkMjciLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZmlsbD0iIzRmNWI3MiIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkltYWdlIFZpdmFUZWNoPC90ZXh0Pjwvc3ZnPg=='">
+        <h4 data-i18n="viva.item1.title">Tech Up - VivaTech</h4>
+        <p data-i18n="viva.item1.desc">Bénévole pour l'édition 2026, au cœur de l'innovation technologique européenne.</p>
+      </div>
+      <!-- Item 2 -->
+      <div class="viva-item">
+        <img src="viva_me.jpg" alt="Rencontres & Découvertes" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiMxYTFkMjciLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZmlsbD0iIzRmNWI3MiIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkltYWdlIFJlbmNvbnRyZXM8L3RleHQ+PC9zdmc+'">
+        <h4 data-i18n="viva.item2.title">Rencontres & Découvertes</h4>
+        <p data-i18n="viva.item2.desc">Échange enrichissant avec les acteurs de la tech, startups et professionnels de l'embarqué.</p>
+      </div>
+      <!-- Item 3 -->
+      <div class="viva-item">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/e/ea/VivaTech_Paris_2019_%2847881079542%29.jpg" alt="Écosystème Européen" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiMxYTFkMjciLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZmlsbD0iIzRmNWI3MiIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkltYWdlIMOJdsOpbmVtZW50PC90ZXh0Pjwvc3ZnPg=='">
+        <h4 data-i18n="viva.item3.title">Écosystème Européen</h4>
+        <p data-i18n="viva.item3.desc">Immersion dans le plus grand salon européen dédié à la technologie et aux startups.</p>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- HERO -->
 <section id="hero">
   <div class="container hero-inner">
-    <div class="hero-badge rv rv-d1"><div class="hero-pulse"></div>Recherche stage PFE — Disponible</div>
+    <div class="hero-badge rv rv-d1"><div class="hero-pulse"></div><span id="hero-badge-text" data-i18n="hero.badge">Stage / Alternance Ingénieur · Disponible dès septembre 2026 · Mobilité France entière</span></div>
+    <p class="hero-kicker rv rv-d2" data-i18n="hero.kicker">Électronique · Automatique · IA Embarquée · Master 2</p>
     <h1 class="hero-title rv rv-d2">
-      Zouhir Ouarab<br><span class="accent">Systèmes Intelligents.</span>
+      Zouhir
+      <span class="accent">Ouarab</span>
     </h1>
-    <p class="hero-sub rv rv-d3">
-      Je conçois des <em>systèmes embarqués intelligents</em> — de la perception IA à l'automatique, en passant par la vision et l'électronique. Master 2 EEEA, Paris-Saclay.
+    <p class="hero-sub rv rv-d3" id="hero-sub" data-i18n="hero.sub">
+      <strong>Ingénieur en Systèmes Embarqués</strong> (Master 2) spécialisé en <em>électronique</em>, <em>automatique</em> et <em>IA embarquée</em>. Je recherche un <em>stage ou alternance</em> d'ingénieur dès septembre 2026. Passionné par le lien capteur-décision, je conçois des systèmes autonomes de bout-en-bout : de l'architecture matérielle jusqu'au firmware et à la perception algorithmique.
     </p>
     <div class="hero-btns rv rv-d4">
-      <a href="#projects" class="btn">Voir mes projets</a>
-      <a href="#contact" class="btn btn-ghost">Me contacter</a>
+      <a href="#projects" class="btn" id="hero-btn-primary" data-i18n="hero.btn1">Consulter mes projets</a>
+      <a href="#contact" class="btn btn-ghost" id="hero-btn-secondary" data-i18n="hero.btn2">Me contacter</a>
+    </div>
+    <div class="hero-highlights rv rv-d5">
+      <span class="hero-chip" data-i18n="hero.chip1">Architecture système (Hardware &amp; Software)</span>
+      <span class="hero-chip" data-i18n="hero.chip2">Validation expérimentale sur cibles</span>
     </div>
   </div>
   <div class="hero-scroll"><span>Scroll</span><div class="scroll-bar"></div></div>
@@ -254,28 +452,109 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:2r
 <!-- ABOUT -->
 <section id="about">
   <div class="container">
-    <div class="sec-tag rv">01 — Profil</div>
-    <h2 class="sec-title rv rv-d1">L'ingénieur derrière<br>les machines.</h2>
+    <div class="sec-tag rv">Profil Technique</div>
+    <h2 class="sec-title rv rv-d1">Présentation.</h2>
     <div class="about-grid">
       <div class="about-visual rv rv-d2">
         <div class="about-frame">
           <img src="zizou.png" alt="Zouhir Ouarab">
-          <div class="about-corners"></div>
-          <span class="about-tag">SYS_READY</span>
         </div>
+        <div class="about-corners"></div>
       </div>
       <div class="about-content">
         <p class="about-text rv rv-d2">
-          Étudiant passionné par l'intersection entre <strong>intelligence artificielle</strong> et <strong>électronique embarquée</strong>. Je vois le monde comme un ensemble de systèmes à comprendre et à optimiser.
+          <strong>Profil hybride</strong> en électronique, automatique et <em>IA embarquée</em> (Master 2), je recherche un <strong>stage ou alternance d'ingénieur dès septembre 2026</strong> dans toute la France. Passionné par le lien capteur-décision, je conçois des systèmes autonomes performants de l'<strong>architecture matérielle</strong> à la <em>perception algorithmique</em>.
         </p>
         <p class="about-text rv rv-d3">
-          Mon objectif : concevoir des <em>systèmes autonomes intelligents</em> — du capteur au cerveau décisionnel. Chaque projet est une occasion de fusionner perception, contrôle et action en temps réel.
+          Ma démarche favorise une approche décloisonnée : capable d'intervenir du <strong>routage du composant électronique</strong> jusqu'au réglage de la <strong>boucle d'asservissement globale</strong>, avec une appétence pour la validation expérimentale sur cible physique.
         </p>
-        <div class="about-stats rv rv-d4">
-          <div><span class="stat-val">M2</span><span class="stat-lbl">EEEA Paris-Saclay</span></div>
-          <div><span class="stat-val">3+</span><span class="stat-lbl">Projets embarqués</span></div>
-          <div><span class="stat-val">∞</span><span class="stat-lbl">Curiosité</span></div>
+        <div class="about-stats rv rv-d5">
+          <div><span class="stat-val">M2</span><span class="stat-lbl">Systèmes Avancés Paris-Saclay</span></div>
+          <div><span class="stat-val">6</span><span class="stat-lbl">Démonstrateurs temps réel</span></div>
         </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCES -->
+<section id="experiences">
+  <div class="container">
+    <div class="sec-tag rv" data-i18n="exp.tag">Parcours Professionnel</div>
+    <h2 class="sec-title rv rv-d1" data-i18n="exp.title">Expériences.</h2>
+    <p class="sec-desc rv rv-d2" style="margin-bottom:0" data-i18n="exp.desc">Engagements concrets qui forgent l'adaptabilité, le sens du service et la rigueur d'organisation.</p>
+    <div class="exp-timeline">
+
+      <!-- VivaTech 2026 -->
+      <div class="exp-item rv rv-d2 clickable-exp" id="exp-vivatech" data-exp-id="vivatech2026" data-exp-date="2026-06-17">
+        <div class="exp-header">
+          <div class="exp-title-block">
+            <div class="exp-badge" data-i18n="exp.viva.badge">Bénévolat Technologie</div>
+            <div class="exp-role">VivaTech 2026 <span class="badge-new" id="badge-new-viva">✦ Nouveau</span></div>
+            <div class="exp-org">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/4/47/Viva_Technology_logo.svg" alt="VivaTech Logo" class="viva-logo" onerror="this.style.display='none'"> 
+              Viva Technology
+            </div>
+          </div>
+          <div class="exp-meta">
+            <span class="exp-date" data-i18n="exp.viva.date">17 – 20 juin 2026</span>
+            <span class="exp-location">📍 Parc des Expositions de Paris</span>
+          </div>
+        </div>
+        <div class="exp-divider"></div>
+        <ul class="exp-bullets">
+          <li data-i18n="exp.viva.b1">Accueil et orientation des visiteurs, guide et information.</li>
+          <li data-i18n="exp.viva.b2">Assistance aux exposants et participation au bon déroulement de l'événement.</li>
+        </ul>
+        <span class="viva-hint" data-i18n="exp.viva.link">Voir la galerie photo 📸</span>
+      </div>
+
+      <!-- Relay / Quick — Job étudiant -->
+      <div class="exp-item rv rv-d3">
+        <div class="exp-header">
+          <div class="exp-title-block">
+            <div class="exp-badge" data-i18n="exp.jobs.badge">Restauration rapide</div>
+            <div class="exp-role" data-i18n="exp.jobs.role">Équipier polyvalent</div>
+            <div class="exp-org">Relay Lagardère / Quick</div>
+          </div>
+          <div class="exp-meta">
+            <span class="exp-date" data-i18n="exp.jobs.date">Août 2023 – Présent</span>
+            <span class="exp-location" data-i18n="exp.jobs.loc">📍 Île-de-France</span>
+          </div>
+        </div>
+        <div class="exp-divider"></div>
+        <ul class="exp-bullets">
+          <li data-i18n="exp.jobs.b1">CDI à temps partiel – Gestion simultanée de plusieurs postes en environnement haute cadence.</li>
+          <li data-i18n="exp.jobs.b2">Travail en équipe et adaptation rapide aux priorités changeantes.</li>
+          <li data-i18n="exp.jobs.b3">Fiabilité et ponctualité démontrées sur poste CDI depuis 2+ ans.</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- DIFFERENCE -->
+<section id="difference">
+  <div class="container">
+    <div class="sec-tag rv">Expertise & Positionnement</div>
+    <h2 class="sec-title rv rv-d1">Points forts.</h2>
+    <p class="sec-desc rv rv-d2" style="margin-bottom:4rem">Les avantages d'un profil hybride et polyvalent pour les phases de R&D ou d'industrialisation.</p>
+    <div class="diff-grid">
+      <div class="diff-card rv rv-d2">
+        <span class="diff-num">01</span>
+        <h3 class="diff-title">Intégration systémique</h3>
+        <p class="diff-desc">Capacité reconnue à analyser un schéma électrique complexe, à optimiser une routine bas niveau (C/C++) ou à implémenter une chaîne d'inférence avancée.</p>
+      </div>
+      <div class="diff-card rv rv-d3">
+        <span class="diff-num">02</span>
+        <h3 class="diff-title">Validation expérimentale</h3>
+        <p class="diff-desc">Maîtrise de la chaîne d'instrumentation et de mesure pour transformer un modèle théorique en prototype viable (asservissement PID, traitement de signal DSP).</p>
+      </div>
+      <div class="diff-card rv rv-d4">
+        <span class="diff-num">03</span>
+        <h3 class="diff-title">Environnements contraints</h3>
+        <p class="diff-desc">Appétence pour les architectures critiques : gestion de la latence, déterminisme temps réel et robustesse face aux perturbations environnementales.</p>
       </div>
     </div>
   </div>
@@ -284,41 +563,66 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:2r
 <!-- SKILLS -->
 <section id="skills">
   <div class="container">
-    <div class="sec-tag rv">02 — Compétences</div>
-    <h2 class="sec-title rv rv-d1">Stack technique.</h2>
+    <div class="sec-tag rv">Compétences Techniques</div>
+    <h2 class="sec-title rv rv-d1">Environnement de travail.</h2>
+    <p class="sec-desc rv rv-d2" style="margin-bottom:2rem">Stack technologique et outils de simulation maîtrisés pour le développement de prototypes et de produits industriels.</p>
     <div class="skills-grid">
-      <div class="sk-card rv rv-d1">
-        <span class="sk-icon">🧠</span>
-        <div class="sk-name">IA & Vision</div>
-        <div class="sk-sub">Perception intelligente</div>
-        <div class="sk-bars">
-          <div><div class="sk-bar-label"><span>Python</span><span>95%</span></div><div class="sk-bar-track"><div class="sk-bar-fill" style="--w:.95"></div></div></div>
-          <div><div class="sk-bar-label"><span>OpenCV / YOLO</span><span>88%</span></div><div class="sk-bar-track"><div class="sk-bar-fill" style="--w:.88"></div></div></div>
-          <div><div class="sk-bar-label"><span>TensorFlow / PyTorch</span><span>80%</span></div><div class="sk-bar-track"><div class="sk-bar-fill" style="--w:.80"></div></div></div>
-        </div>
-        <div class="sk-tags"><span class="sk-tag">SLAM</span><span class="sk-tag">Fusion capteurs</span><span class="sk-tag">LiDAR</span></div>
-      </div>
+      <!-- Card 1 -->
       <div class="sk-card rv rv-d2">
         <span class="sk-icon">⚡</span>
-        <div class="sk-name">Embarqué</div>
-        <div class="sk-sub">Hardware & Firmware</div>
-        <div class="sk-bars">
-          <div><div class="sk-bar-label"><span>C / C++</span><span>90%</span></div><div class="sk-bar-track"><div class="sk-bar-fill" style="--w:.90"></div></div></div>
-          <div><div class="sk-bar-label"><span>STM32 / Arduino</span><span>85%</span></div><div class="sk-bar-track"><div class="sk-bar-fill" style="--w:.85"></div></div></div>
-          <div><div class="sk-bar-label"><span>FPGA</span><span>70%</span></div><div class="sk-bar-track"><div class="sk-bar-fill" style="--w:.70"></div></div></div>
+        <h3 class="sk-name">Hardware & Analogique</h3>
+        <div class="sk-tags">
+          <span class="sk-tag hl-tech">Transistors BJT/MOSFET</span><span class="sk-tag">AOP</span><span class="sk-tag">Filtres RC/LC</span><span class="sk-tag hl-manager">LTspice</span><span class="sk-tag hl-manager">KiCad</span><span class="sk-tag hl-tech">PCB</span>
         </div>
-        <div class="sk-tags"><span class="sk-tag">Raspberry Pi</span><span class="sk-tag">PID</span><span class="sk-tag">PWM</span></div>
       </div>
+      <!-- Card 2 -->
+      <div class="sk-card rv rv-d3">
+        <span class="sk-icon">⚙️</span>
+        <h3 class="sk-name">Firmware & Bas Niveau</h3>
+        <div class="sk-tags">
+          <span class="sk-tag hl-tech">C/C++ bare-metal</span><span class="sk-tag hl-tech">Assembleur ARM</span><span class="sk-tag hl-tech">STM32</span><span class="sk-tag hl-manager">RTOS</span><span class="sk-tag hl-tech">FPGA/VHDL</span><span class="sk-tag">GPIO/DMA</span>
+        </div>
+      </div>
+      <!-- Card 3 -->
+      <div class="sk-card rv rv-d4">
+        <span class="sk-icon">📉</span>
+        <h3 class="sk-name">Signal, Contrôle & Mesure</h3>
+        <div class="sk-tags">
+          <span class="sk-tag">PID/LQR</span><span class="sk-tag">Kalman/EKF</span><span class="sk-tag">FFT/DSP</span><span class="sk-tag">FIR/IIR</span><span class="sk-tag">MATLAB/Simulink</span><span class="sk-tag">Métrologie</span>
+        </div>
+      </div>
+      <!-- Card 4 -->
+      <div class="sk-card rv rv-d2">
+        <span class="sk-icon">🌐</span>
+        <h3 class="sk-name">Réseaux & Protocoles</h3>
+        <div class="sk-tags">
+          <span class="sk-tag">TCP/IP</span><span class="sk-tag">OSI</span><span class="sk-tag">UART/SPI/I2C</span><span class="sk-tag">CAN</span><span class="sk-tag">RS-485</span><span class="sk-tag">Modulation AM/FM/PSK</span>
+        </div>
+      </div>
+      <!-- Card 5 -->
       <div class="sk-card rv rv-d3">
         <span class="sk-icon">🤖</span>
-        <div class="sk-name">Robotique</div>
-        <div class="sk-sub">Contrôle & Autonomie</div>
-        <div class="sk-bars">
-          <div><div class="sk-bar-label"><span>ROS2</span><span>85%</span></div><div class="sk-bar-track"><div class="sk-bar-fill" style="--w:.85"></div></div></div>
-          <div><div class="sk-bar-label"><span>Automatique</span><span>90%</span></div><div class="sk-bar-track"><div class="sk-bar-fill" style="--w:.90"></div></div></div>
-          <div><div class="sk-bar-label"><span>Navigation autonome</span><span>82%</span></div><div class="sk-bar-track"><div class="sk-bar-fill" style="--w:.82"></div></div></div>
+        <h3 class="sk-name">Robotique & Perception</h3>
+<style>
+  [data-profile="tech"] .hl-tech,
+  [data-profile="manager"] .hl-manager,
+  [data-profile="recruiter"] .hl-recruiter { border-color: var(--accent); color: var(--accent); }
+  .proj-list { display: flex; flex-direction: column; }
+  .proj[data-cat="sys"] { order: 1; }
+  .proj[data-cat="soft"] { order: 2; }
+</style>
+
+        <div class="sk-tags">
+          <span class="sk-tag">ROS2</span><span class="sk-tag">SLAM</span><span class="sk-tag">LiDAR</span><span class="sk-tag">Event Camera</span><span class="sk-tag">Odométrie</span><span class="sk-tag">Path Planning</span>
         </div>
-        <div class="sk-tags"><span class="sk-tag">Planification</span><span class="sk-tag">Localisation</span><span class="sk-tag">Commande</span></div>
+      </div>
+      <!-- Card 6 -->
+      <div class="sk-card rv rv-d4">
+        <span class="sk-icon">👁️</span>
+        <h3 class="sk-name">AI Vision & ML</h3>
+        <div class="sk-tags">
+          <span class="sk-tag hl-tech">PyTorch</span><span class="sk-tag">YOLO v8</span><span class="sk-tag">OpenCV</span><span class="sk-tag">Edge AI</span><span class="sk-tag">ONNX</span><span class="sk-tag">Segmentation</span>
+        </div>
       </div>
     </div>
   </div>
@@ -327,25 +631,26 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:2r
 <!-- PROJECTS -->
 <section id="projects">
   <div class="container">
-    <div class="sec-tag rv">03 — Projets</div>
-    <h2 class="sec-title rv rv-d1">Ce que je construis.</h2>
-    <p class="sec-desc rv rv-d2" style="margin-bottom:4rem">De l'idée au prototype fonctionnel — chaque projet intègre perception, contrôle et intelligence embarquée.</p>
+    <div class="sec-tag rv">Réalisations Techniques</div>
+    <h2 class="sec-title rv rv-d1">Démonstrateurs.</h2>
+    <p class="sec-desc rv rv-d2" style="margin-bottom:4rem">Projets documentés démontrant une approche complète : modélisation, conception, intégration et validation.</p>
     <div class="proj-list">
 
       <div class="proj rv">
         <div class="proj-visual">
-          <img src="real_autonomous_car_1774973969913.png" alt="Robot Conduite Autonome">
+          <img src="real_autonomous_car.png" alt="Robot Conduite Autonome">
           <span class="proj-num">01</span>
         </div>
         <div class="proj-info">
           <span class="proj-year">2025</span>
-          <h3 class="proj-title">Robot Conduite Autonome</h3>
-          <p class="proj-desc">Véhicule miniature Raspberry Pi avec pipeline de perception temps réel : caméra + LiDAR, détection d'obstacles YOLO, algorithme d'évitement adaptatif et télémétrie serveur.</p>
+          <h3 class="proj-title">Plateforme Robotique Autonome</h3>
+          <p class="proj-desc">Plateforme motorisée effectuant un suivi de voie via traitement d'image HSV déterministe (25 fps) et régulation PID. Intégration de YOLOv8 pour la classification d'obstacles et signalement réseau.</p>
+          <p class="proj-proof">Odométrie · Vision multi-capteurs · Algorithmique de contrôle</p>
           <div class="proj-tech">
-            <span>Python</span><span>OpenCV</span><span>YOLO</span><span>SLAM</span><span>LiDAR</span><span>PID</span>
+            <span>Python</span><span>OpenCV</span><span>HSV</span><span>PID</span><span>YOLOv8</span>
           </div>
           <a href="projet-vehicule-autonome.html" class="proj-link">
-            Découvrir
+            Consulter
             <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
           </a>
         </div>
@@ -353,18 +658,61 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:2r
 
       <div class="proj rv">
         <div class="proj-visual">
-          <img src="real_lka_system_1774974016262.png" alt="Système Maintien Trajectoire">
+          <img src="NFC_interface.png" alt="Interface NFC">
           <span class="proj-num">02</span>
         </div>
         <div class="proj-info">
+          <span class="proj-year">2025</span>
+          <h3 class="proj-title">Interface Matérielle RFID/NFC</h3>
+          <p class="proj-desc">Conception d'une application client (Java/Android Studio) pour lire et dupliquer des badges Mifare via un module RC522. Implémentation d'une machine à états asynchrone pour garantir une UX fluide lors des accès cryptographiques matériels.</p>
+          <p class="proj-proof">Développement GUI · Architecture Logicielle · Communication Série</p>
+          <div class="proj-tech">
+            <span>Java</span><span>Android SDK</span><span>UART</span><span>UX/UI</span><span>NFC</span>
+          </div>
+          <a href="projet-nfc-badge.html" class="proj-link">
+            Consulter
+            <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+          </a>
+        </div>
+      </div>
+
+
+
+      <div class="proj rv">
+        <div class="proj-visual">
+          <img src="F01.png" alt="Désembuage d'images" onerror="this.src='real_autonomous_car.png'">
+          <span class="proj-num">03</span>
+        </div>
+        <div class="proj-info">
+          <span class="proj-year">2025</span>
+          <h3 class="proj-title">Restauration d'Images Dégradées</h3>
+          <p class="proj-desc">Implémentation d'algorithmes avancés de traitement d'image (Dehazing) pour extraire de l'information dans des environnements fortement bruités ou masqués (brouillard). Estimation des cartes de transmission et du voile atmosphérique.</p>
+          <p class="proj-proof">Modèles physiques · Traitement d'image · Optimisation</p>
+          <div class="proj-tech">
+            <span>Python</span><span>OpenCV</span><span>Mathématiques</span><span>Algorithmique</span>
+          </div>
+          <a href="projet-dehazing.html" class="proj-link">
+            Consulter
+            <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="proj rv">
+        <div class="proj-visual">
+          <img src="real_lka_system.png" alt="Système Maintien Trajectoire">
+          <span class="proj-num">04</span>
+        </div>
+        <div class="proj-info">
           <span class="proj-year">2024</span>
-          <h3 class="proj-title">Maintien de Trajectoire</h3>
-          <p class="proj-desc">Véhicule suiveur de ligne autonome avec capteur infrarouge, régulateur PID temps réel en C sur Arduino et contrôle moteur via pont en H L298N.</p>
+          <h3 class="proj-title">Asservissement de Trajectoire LKA</h3>
+          <p class="proj-desc">Plateforme instrumentée démontrant le maintien de trajectoire par rétroaction de capteurs infrarouges (LKA proxy). Conception d'un régulateur PID optimisé en C embarqué pour minimiser l'erreur de consigne.</p>
+          <p class="proj-proof">Acquisition de données · DSP · Contrôle moteur (Pont H)</p>
           <div class="proj-tech">
             <span>C</span><span>Arduino</span><span>PID</span><span>Électronique</span><span>L298N</span>
           </div>
           <a href="projet-pid-trajectoire.html" class="proj-link">
-            Découvrir
+            Consulter
             <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
           </a>
         </div>
@@ -372,67 +720,355 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:2r
 
       <div class="proj rv">
         <div class="proj-visual">
-          <img src="real_dmx_stage_1774974047303.png" alt="Effets Lumineux">
-          <span class="proj-num">03</span>
+          <img src="real_dmx_stage.png" alt="Effets Lumineux">
+          <span class="proj-num">05</span>
         </div>
         <div class="proj-info">
           <span class="proj-year">2024</span>
-          <h3 class="proj-title">Effets Lumineux Actifs</h3>
-          <p class="proj-desc">Rétro-ingénierie d'un bandeau LED commercial, reprogrammation bas niveau du microcontrôleur en C pour synchronisation musicale algorithmique en temps réel.</p>
+          <h3 class="proj-title">Dispositif Lumineux Réactif</h3>
+          <p class="proj-desc">Analyse par rétro-ingénierie d'un dispositif LED WS2812B, suivie du développement d'un firmware personnalisé en C (AVR). Implémentation d'une boucle Fast Fourier Transform (FFT) pour synchronisation temps réel audio/lumière.</p>
+          <p class="proj-proof">Ingénierie inverse · Registres MCU · Filtrage numérique</p>
           <div class="proj-tech">
             <span>C</span><span>MCU</span><span>Rétro-ingénierie</span><span>DSP</span>
           </div>
           <a href="projet-led-guitariste.html" class="proj-link">
-            Découvrir
+            Consulter
             <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
           </a>
         </div>
       </div>
 
-    </div>
+      <div class="proj rv">
+        <div class="proj-visual">
+          <img src="real_smart_city.png" alt="Dashboard Météo API">
+          <span class="proj-num">06</span>
+        </div>
+        <div class="proj-info">
+          <span class="proj-year">2024</span>
+          <h3 class="proj-title">Interface de Supervision Télémétrique</h3>
+          <p class="proj-desc">Application client léger développée en JavaScript natif exploitant divers points de terminaison (API Open-Meteo, Géolocalisation). Mise en œuvre de mécanismes de fallback robustes en cas de latence ou perte réseau.</p>
+          <p class="proj-proof">Interface asynchrone · Tolérance aux pannes · Intégration API</p>
+          <div class="proj-tech">
+            <span>JavaScript</span><span>Fetch API</span><span>Open-Meteo</span><span>Web</span>
+          </div>
+          <a href="projet-meteo-api.html" class="proj-link">
+            Consulter
+            <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+          </a>
+        </div>
+      </div>
+    </div> <!-- end proj-list -->
   </div>
 </section>
 
 <!-- CONTACT -->
 <section id="contact">
   <div class="container">
-    <div class="sec-tag rv" style="justify-content:center">04 — Contact</div>
-    <h2 class="sec-title rv rv-d1" style="text-align:center">Construisons<br>ensemble.</h2>
+    <div class="sec-tag rv" style="justify-content:center">Disponibilité</div>
+    <h2 class="sec-title rv rv-d1" style="text-align:center">Contactez-moi.</h2>
     <div class="contact-card rv rv-d2">
-      <p class="contact-desc">Vous cherchez un stagiaire passionné par la robotique et l'IA embarquée ? Parlons de votre prochain projet autonome.</p>
-      <a href="mailto:zouhir.ouarab@outlook.com" class="contact-email">zouhir.ouarab@outlook.com →</a>
+      <p class="contact-desc">Si mon profil correspond à vos critères et que vous recherchez un ingénieur autonome capable de lier matériel et traitement algorithmique, je suis disponible pour un entretien — <strong style="color:var(--text)">stage ou alternance</strong> dès septembre 2026.</p>
+      <a href="mailto:zouhir.ouarab@outlook.com?subject=Contact%20via%20Portfolio%20-%20Stage%2FAlternance%20Ing%C3%A9nieur&body=Bonjour%20Zouhir%2C%0D%0A%0D%0ANous%20avons%20pris%20connaissance%20de%20votre%20portfolio..." class="contact-email">zouhir.ouarab@outlook.com →</a>
+      <p class="contact-meta">Disponible dès sept. 2026 · Stage ou Alternance · Mobilité France entière</p>
       <div class="contact-socials">
-        <a href="https://linkedin.com/in/zouhir-ouarab" target="_blank" rel="noopener" class="soc-link">LinkedIn</a>
-        <a href="https://github.com/" target="_blank" rel="noopener" class="soc-link">GitHub</a>
-        <a href="mailto:zouhir.ouarab@outlook.com" class="soc-link">Email</a>
+        <a href="https://www.linkedin.com/in/zouhir-ouarab/" target="_blank" rel="noopener" class="soc-link">Profil LinkedIn</a>
+        <a href="mailto:zouhir.ouarab@outlook.com?subject=Contact%20via%20Portfolio%20-%20Stage%20Ing%C3%A9nieur&body=Bonjour%20Zouhir..." class="soc-link">Contactez-moi</a>
       </div>
     </div>
   </div>
 </section>
 
-<footer><div class="container">&lt;/&gt; © 2026 Zouhir Ouarab — Engineered with precision.</div></footer>
+<footer><div class="container">&lt;/&gt; © 2026 Zouhir Ouarab — Systèmes embarqués, perception et prototypes temps réel.<br><span style="opacity:0.6; font-size:0.85em;">Des LLM et agents IA sont utilisés pour faire ce site vitrine.</span><br><button class="footer-reset" id="resetPrefs" data-i18n="footer.reset">Réinitialiser mes préférences</button></div></footer>
 
 <script>
+/* ════════════════════════════════════════
+   PERSONALIZATION ENGINE — localStorage
+   Keys: zouPortfolio_profile | _theme | _lang | _lastVisit | _seenProjects
+   ════════════════════════════════════════ */
+const LS = {
+  get: k => { try { return localStorage.getItem('zouPortfolio_' + k); } catch(e){ return null; } },
+  set: (k, v) => { try { localStorage.setItem('zouPortfolio_' + k, v); } catch(e){} },
+  del: k => { try { localStorage.removeItem('zouPortfolio_' + k); } catch(e){} },
+  getJSON: k => { try { return JSON.parse(localStorage.getItem('zouPortfolio_' + k)) || []; } catch(e){ return []; } },
+  setJSON: (k, v) => { try { localStorage.setItem('zouPortfolio_' + k, JSON.stringify(v)); } catch(e){} }
+};
+
+/* ── i18n Translations ── */
+const i18n = {
+  fr: {
+    'nav.profil':'Profil Technique','nav.exp':'Expériences','nav.skills':'Outils',
+    'nav.projects':'Démonstrateurs','nav.contact':'Contact',
+    'hero.badge':'Stage / Alternance Ingénieur · Disponible dès septembre 2026 · Mobilité France entière',
+    'hero.kicker':'Électronique · Automatique · IA Embarquée · Master 2',
+    'hero.btn1':'Consulter mes projets','hero.btn2':'Me contacter',
+    'hero.chip1':'Architecture système (Hardware & Software)',
+    'hero.chip2':'Validation expérimentale sur cibles',
+    'exp.tag':'Parcours Professionnel','exp.title':'Expériences.',
+    'exp.desc':"Engagements concrets qui forgent l'adaptabilité, le sens du service et la rigueur d'organisation.",
+    'exp.viva.badge':'Bénévolat Technologie','exp.viva.date':'17 – 20 juin 2026',
+    'exp.viva.b1':'Accueil et orientation des visiteurs, guide et information.',
+    'exp.viva.b2':"Assistance aux exposants et participation au bon déroulement de l'événement.",
+    'exp.jobs.badge':'Restauration rapide',
+    'exp.jobs.role':'Équipier polyvalent',
+    'exp.jobs.date':'Août 2023 – Présent',
+    'exp.jobs.loc':'📍 Île-de-France',
+    'exp.jobs.b1':'CDI à temps partiel – Gestion simultanée de plusieurs postes en environnement haute cadence.',
+    'exp.jobs.b2':'Travail en équipe et adaptation rapide aux priorités changeantes.',
+    'exp.jobs.b3':'Fiabilité et ponctualité démontrées sur poste CDI depuis 2+ ans.',
+    'exp.viva.link':'Voir la galerie photo 📸',
+    'viva.modal.tag':'Immersion Technologique',
+    'viva.modal.title':'Galerie VivaTech 2026',
+    'viva.modal.sub':'Découverte des dernières innovations en robotique, IA et systèmes embarqués lors du plus grand salon européen de la tech.',
+    'viva.item1.title':'Tech Up - VivaTech',
+    'viva.item1.desc':'Bénévole pour l\'édition 2026, au cœur de l\'innovation technologique européenne.',
+    'viva.item2.title':'Rencontres & Découvertes',
+    'viva.item2.desc':'Échange enrichissant avec les acteurs de la tech, startups et professionnels de l\'embarqué.',
+    'viva.item3.title':'Écosystème Européen',
+    'viva.item3.desc':'Immersion dans le plus grand salon européen dédié à la technologie et aux startups.',
+    'modal.greeting':'Bienvenue 👋','modal.title':'Qui êtes-vous ?',
+    'modal.sub':'Je vais adapter ce portfolio à votre profil pour une expérience optimale.',
+    'modal.opt1.title':'Recruteur / RH','modal.opt1.sub':'Je recherche un candidat pour un poste ou un stage',
+    'modal.opt2.title':'Chercheur / Enseignant','modal.opt2.sub':"Je m'intéresse aux travaux académiques et projets de recherche",
+    'modal.opt3.title':'Développeur / Ingénieur',"modal.opt3.sub":"Je m'intéresse à la stack technique et aux projets open-source",
+    'modal.skip':'Continuer sans personnaliser →',
+    'footer.reset':'Réinitialiser mes préférences'
+  },
+  en: {
+    'nav.profil':'Technical Profile','nav.exp':'Experience','nav.skills':'Tools',
+    'nav.projects':'Demonstrators','nav.contact':'Contact',
+    'hero.badge':'Engineering Internship / Work-Study · Available from September 2026 · All of France',
+    'hero.kicker':'Electronics · Automation · Embedded AI · Master 2',
+    'hero.btn1':'View my projects','hero.btn2':'Contact me',
+    'hero.chip1':'System Architecture (Hardware & Software)',
+    'hero.chip2':'Experimental validation on target platforms',
+    'exp.tag':'Professional Background','exp.title':'Experience.',
+    'exp.desc':'Concrete commitments that build adaptability, service mindset and organisational rigour.',
+    'exp.viva.badge':'Tech Volunteering','exp.viva.date':'June 17 – 20, 2026',
+    'exp.viva.b1':'Visitor welcome, guidance and information.',
+    'exp.viva.b2':'Exhibitor support and contribution to smooth event operations.',
+    'exp.jobs.badge':'Fast Food / Retail',
+    'exp.jobs.role':'Versatile Team Member',
+    'exp.jobs.date':'Aug 2023 – Present',
+    'exp.jobs.loc':'📍 Île-de-France (Paris Region)',
+    'exp.jobs.b1':'Part-time permanent contract – Simultaneous management of multiple stations in a fast-paced environment.',
+    'exp.jobs.b2':'Teamwork and quick adaptation to changing priorities.',
+    'exp.jobs.b3':'Proven reliability and punctuality in a permanent role for 2+ years.',
+    'exp.viva.link':'View photo gallery 📸',
+    'viva.modal.tag':'Technological Immersion',
+    'viva.modal.title':'VivaTech 2026 Gallery',
+    'viva.modal.sub':'Discovering the latest innovations in robotics, AI, and embedded systems at Europe\'s largest tech event.',
+    'viva.item1.title':'Tech Up - VivaTech',
+    'viva.item1.desc':'Volunteer for the 2026 edition, at the heart of European technological innovation.',
+    'viva.item2.title':'Meetings & Discoveries',
+    'viva.item2.desc':'Enriching exchanges with tech players, startups, and embedded systems professionals.',
+    'viva.item3.title':'European Ecosystem',
+    'viva.item3.desc':'Immersion in Europe\'s largest trade fair dedicated to technology and startups.',
+    'modal.greeting':'Welcome 👋','modal.title':'Who are you?',
+    'modal.sub':'I will tailor this portfolio to your profile for the best experience.',
+    'modal.opt1.title':'Recruiter / HR','modal.opt1.sub':'I am looking for a candidate for a position or internship',
+    'modal.opt2.title':'Researcher / Lecturer','modal.opt2.sub':'I am interested in academic work and research projects',
+    'modal.opt3.title':'Developer / Engineer','modal.opt3.sub':'I am interested in the tech stack and open-source projects',
+    'modal.skip':'Continue without personalising →',
+    'footer.reset':'Reset my preferences'
+  }
+};
+
+/* ── Profile content overrides ── */
+const profileContent = {
+  rh: {
+    badge: { fr:'👔 Candidat Ingénieur · Disponible dès sept. 2026 · Stage ou Alternance', en:'👔 Engineering Candidate · Available from Sept. 2026 · Internship or Work-Study' },
+    sub: { fr:'Ingénieur <strong>Systèmes Embarqués</strong> M2, disponible dès <strong>septembre 2026</strong> pour un <strong>stage ou une alternance</strong>. Fiable, rigoureux, capable d\'intervenir du hardware au firmware, avec une expérience validée en CDI.', en:'M2 <strong>Embedded Systems</strong> engineer, available from <strong>September 2026</strong> for an <strong>internship or work-study contract</strong>. Reliable, rigorous, able to work from hardware to firmware, with proven long-term employment experience.' },
+    btn1: { fr:'Consulter mes projets', en:'View my projects' },
+    btn1href: '#projects'
+  },
+  manager: {
+    badge: { fr:'🎯 Vision Système · Conception, Intégration & Validation', en:'🎯 System Vision · Design, Integration & Validation' },
+    sub: { fr:'De l\'architecture matérielle à la perception algorithmique, je conçois des <strong>systèmes autonomes complets</strong>. Autonome sur l\'ensemble du cycle en V, je m\'attache au respect rigoureux du cahier des charges et des contraintes temps réel.', en:'From hardware architecture to algorithmic perception, I design <strong>complete autonomous systems</strong>. Autonomous across the entire V-model lifecycle, I am dedicated to strict compliance with specifications and real-time constraints.' },
+    btn1: { fr:'Consulter mes projets', en:'View my projects' },
+    btn1href: '#projects'
+  },
+  tech: {
+    badge: { fr:'👨‍💻 C/C++ Bare-metal · STM32/RTOS · PyTorch & ROS2', en:'👨‍💻 C/C++ Bare-metal · STM32/RTOS · PyTorch & ROS2' },
+    sub: { fr:'Stack : <strong>C/C++ bare-metal</strong>, <strong>STM32/RTOS</strong>, <strong>ROS2</strong>, <strong>PyTorch/YOLO</strong>, <strong>OpenCV</strong>, <strong>VHDL/FPGA</strong>. Je construis des démonstrateurs complexes allant de la conception du PCB jusqu\'au modèle d\'inférence déployé sur edge.', en:'Stack: <strong>C/C++ bare-metal</strong>, <strong>STM32/RTOS</strong>, <strong>ROS2</strong>, <strong>PyTorch/YOLO</strong>, <strong>OpenCV</strong>, <strong>VHDL/FPGA</strong>. I build complex demonstrators from PCB design to edge-deployed inference models.' },
+    btn1: { fr:'Consulter mes projets', en:'View my projects' },
+    btn1href: '#projects'
+  }
+};
+
+/* ── Language Manager ── */
+let currentLang = LS.get('lang') || (navigator.language.startsWith('fr') ? 'fr' : 'en');
+function applyLang(lang) {
+  currentLang = lang;
+  LS.set('lang', lang);
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (i18n[lang] && i18n[lang][key]) {
+      if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') el.placeholder = i18n[lang][key];
+      else el.innerHTML = i18n[lang][key];
+    }
+  });
+  const btn = document.getElementById('langBtn');
+  if (btn) { btn.textContent = lang === 'fr' ? 'EN' : 'FR'; btn.title = lang === 'fr' ? 'Switch to English' : 'Passer en français'; }
+  // Re-apply profile overrides in new language
+  const profile = LS.get('profile');
+  if (profile && profileContent[profile]) applyProfileContent(profile);
+}
+
+/* ── Theme Manager ── */
+let currentTheme = LS.get('theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+function applyTheme(theme) {
+  currentTheme = theme;
+  LS.set('theme', theme);
+  document.documentElement.classList.toggle('light', theme === 'light');
+  const btn = document.getElementById('themeBtn');
+  if (btn) btn.textContent = theme === 'dark' ? '☀️' : '🌙';
+}
+
+/* ── Profile Content Applier ── */
+function applyProfileContent(profile) {
+  if (profile && profile !== 'none') {
+    document.body.setAttribute('data-profile', profile);
+  } else {
+    document.body.removeAttribute('data-profile');
+  }
+  const c = profileContent[profile];
+  if (!c) return;
+  const lang = currentLang;
+  const badgeEl = document.getElementById('hero-badge-text');
+  const subEl = document.getElementById('hero-sub');
+  const btn1 = document.getElementById('hero-btn-primary');
+  if (badgeEl && c.badge) badgeEl.innerHTML = c.badge[lang] || c.badge.fr;
+  if (subEl && c.sub) subEl.innerHTML = c.sub[lang] || c.sub.fr;
+  if (btn1 && c.btn1) {
+    btn1.innerHTML = c.btn1[lang] || c.btn1.fr;
+    if (c.btn1href) btn1.href = c.btn1href;
+  }
+}
+
+/* ── Profile Modal ── */
+const modal = document.getElementById('profile-modal');
+function openModal() {
+  if (!modal) return;
+  requestAnimationFrame(() => { modal.classList.add('open'); document.body.style.overflow = 'hidden'; });
+}
+function closeModal() {
+  if (!modal) return;
+  modal.classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.querySelectorAll('.pm-opt').forEach(opt => {
+  const activate = () => {
+    const profile = opt.dataset.profile;
+    LS.set('profile', profile);
+    closeModal();
+    applyProfileContent(profile);
+  };
+  opt.addEventListener('click', activate);
+  opt.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') activate(); });
+});
+const pmSkip = document.getElementById('pm-skip');
+if (pmSkip) pmSkip.addEventListener('click', () => { LS.set('profile', 'none'); closeModal(); });
+
+/* ── Return-visitor Memory (Silent) ── */
+// Toast notification removed to prevent 'surveillance' feeling.
+// The memory simply persists the profile silently.
+
+/* ── VivaTech Modal ── */
+const vivaModal = document.getElementById('vivatech-modal');
+const expVivatech = document.getElementById('exp-vivatech');
+const vivaClose = document.getElementById('viva-close');
+function openVivatech() { if(vivaModal){ vivaModal.classList.add('open'); document.body.style.overflow = 'hidden'; } }
+function closeVivatech() { if(vivaModal){ vivaModal.classList.remove('open'); document.body.style.overflow = ''; } }
+if(expVivatech) expVivatech.addEventListener('click', openVivatech);
+if(vivaClose) vivaClose.addEventListener('click', closeVivatech);
+if(vivaModal) vivaModal.addEventListener('click', e => { if(e.target === vivaModal) closeVivatech(); });
+
+/* ── Seen Projects Tracker ── */
+function initSeenProjects() {
+  const seen = LS.getJSON('seenProjects');
+  const projObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.dataset.projId;
+        if (id && !seen.includes(id)) {
+          seen.push(id);
+          LS.setJSON('seenProjects', seen);
+        }
+        entry.target.classList.add('seen');
+        projObs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.4 });
+  document.querySelectorAll('.proj').forEach((el, i) => {
+    const id = 'proj_' + (i + 1);
+    el.dataset.projId = id;
+    if (seen.includes(id)) el.classList.add('seen');
+    else projObs.observe(el);
+  });
+}
+
+/* ── "Nouveau" Badge Manager ── */
+function initNewBadge() {
+  const badge = document.getElementById('badge-new-viva');
+  if (!badge) return;
+  const expDate = new Date('2026-06-17').getTime();
+  const daysSince = (Date.now() - expDate) / 86400000;
+  if (daysSince > 45) badge.style.display = 'none'; // hide after 45 days
+}
+
+/* ── Reset preferences ── */
+const resetBtn = document.getElementById('resetPrefs');
+if (resetBtn) resetBtn.addEventListener('click', () => {
+  ['profile','theme','lang','lastVisit','seenProjects'].forEach(k => LS.del(k));
+  location.reload();
+});
+
+/* ── Theme & Lang buttons ── */
+const themeBtn = document.getElementById('themeBtn');
+const langBtn = document.getElementById('langBtn');
+if (themeBtn) themeBtn.addEventListener('click', () => applyTheme(currentTheme === 'dark' ? 'light' : 'dark'));
+if (langBtn) langBtn.addEventListener('click', () => applyLang(currentLang === 'fr' ? 'en' : 'fr'));
+
+/* ── INIT — run on load ── */
+(function init() {
+  applyTheme(currentTheme);
+  applyLang(currentLang);
+  initNewBadge();
+  const profile = LS.get('profile');
+  const isFirstVisit = !LS.get('lastVisit');
+  if (isFirstVisit) {
+    setTimeout(openModal, 800);
+  } else {
+    // Silent memory restore without invasive toast
+    if (profile && profile !== 'none') applyProfileContent(profile);
+  }
+  LS.set('lastVisit', Date.now().toString());
+  initSeenProjects();
+})();
+
+/* ════════════════════════════════════════
+   EXISTING SCRIPTS (particles, cursor, nav, reveal)
+   ════════════════════════════════════════ */
+
 /* ── Particles Canvas ── */
 ;(function(){
   const c=document.getElementById('particles'),x=c.getContext('2d');
-  let W,H,pts=[];
+  let W,H,pts=[],m={x:0,y:0,active:false};
   function resize(){W=c.width=innerWidth;H=c.height=innerHeight}
   resize();addEventListener('resize',resize);
-  for(let i=0;i<80;i++) pts.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*1.5+.5});
+  addEventListener('mousemove',e=>{m.x=e.clientX;m.y=e.clientY;m.active=true});
+  addEventListener('mouseleave',()=>m.active=false);
+  for(let i=0;i<100;i++) pts.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4,r:Math.random()*1.5+.5});
   function draw(){
     x.clearRect(0,0,W,H);
     pts.forEach((p,i)=>{
-      p.x+=p.vx;p.y+=p.vy;
-      if(p.x<0||p.x>W)p.vx*=-1;
-      if(p.y<0||p.y>H)p.vy*=-1;
-      x.beginPath();x.arc(p.x,p.y,p.r,0,Math.PI*2);
-      x.fillStyle='rgba(0,229,255,.35)';x.fill();
-      for(let j=i+1;j<pts.length;j++){
-        const d=Math.hypot(pts[j].x-p.x,pts[j].y-p.y);
-        if(d<120){x.beginPath();x.moveTo(p.x,p.y);x.lineTo(pts[j].x,pts[j].y);
-        x.strokeStyle=`rgba(0,229,255,${.08*(1-d/120)})`;x.lineWidth=.5;x.stroke()}
-      }
+      if(m.active){const dx=m.x-p.x,dy=m.y-p.y,d=Math.hypot(dx,dy);if(d<200){p.vx+=(dx/d)*.02;p.vy+=(dy/d)*.02}}
+      p.x+=p.vx;p.y+=p.vy;p.vx*=.99;p.vy*=.99;
+      if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;
+      x.beginPath();x.arc(p.x,p.y,p.r,0,Math.PI*2);x.fillStyle='rgba(80,144,240,.4)';x.fill();
+      if(m.active){const d=Math.hypot(m.x-p.x,m.y-p.y);if(d<150){x.beginPath();x.moveTo(p.x,p.y);x.lineTo(m.x,m.y);x.strokeStyle=`rgba(80,144,240,${.15*(1-d/150)})`;x.lineWidth=.6;x.stroke();}}
+      for(let j=i+1;j<pts.length;j++){const d=Math.hypot(pts[j].x-p.x,pts[j].y-p.y);if(d<130){x.beginPath();x.moveTo(p.x,p.y);x.lineTo(pts[j].x,pts[j].y);x.strokeStyle=`rgba(80,144,240,${.1*(1-d/130)})`;x.lineWidth=.4;x.stroke()}}
     });
     requestAnimationFrame(draw);
   }
@@ -444,7 +1080,7 @@ const cDot=document.getElementById('cDot'),cRing=document.getElementById('cRing'
 let mx=0,my=0,rx=0,ry=0;
 addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cDot.style.left=mx+'px';cDot.style.top=my+'px'});
 (function anim(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;cRing.style.left=rx+'px';cRing.style.top=ry+'px';requestAnimationFrame(anim)})();
-document.querySelectorAll('a,button,.sk-card,.proj,.btn').forEach(el=>{
+document.querySelectorAll('a,button,.sk-card,.proj,.btn,.pm-opt').forEach(el=>{
   el.addEventListener('mouseenter',()=>cRing.classList.add('hover'));
   el.addEventListener('mouseleave',()=>cRing.classList.remove('hover'));
 });
@@ -461,10 +1097,6 @@ document.querySelectorAll('.dl').forEach(a=>a.addEventListener('click',()=>{draw
 /* ── Scroll Reveal ── */
 const rvObs=new IntersectionObserver((ents,obs)=>{ents.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');obs.unobserve(e.target)}})},{threshold:.12});
 document.querySelectorAll('.rv').forEach(el=>rvObs.observe(el));
-
-/* ── Skill bars animate ── */
-const barObs=new IntersectionObserver((ents,obs)=>{ents.forEach(e=>{if(e.isIntersecting){e.target.style.transform=`scaleX(${e.target.style.getPropertyValue('--w')})`;obs.unobserve(e.target)}})},{threshold:.5});
-document.querySelectorAll('.sk-bar-fill').forEach(el=>barObs.observe(el));
 
 /* ── Smooth scroll nav links ── */
 document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{e.preventDefault();const t=document.querySelector(a.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth'})})});

@@ -2,74 +2,119 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Zouhir OUARAB — Dashboard Météo API</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zouhir Ouarab — Dashboard météo temps réel</title>
+  <meta name="description" content="Projet de dashboard météo temps réel avec géolocalisation, gestion de fallback, consommation d'API externe et interface de supervision.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
+    /* ── DESIGN TOKENS (identiques à l'accueil) ── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --black: #050505;
-      --white: #f5f2ee;
-      --accent: #c8a96e;
+      --bg:#151c2e; --surface:#1e263d; --surface2:#0c1020;
+      --border:rgba(80,140,255,.12); --border2:rgba(80,140,255,.25);
+      --text:#e8ecf4; --dim:#8a95aa; --dim2:#4a5570;
+      --cyan:#5090f0; --green:#70b8e8; --accent:#c8a96e;
+      --sans:'Inter',system-ui,sans-serif;
+      --mono:'JetBrains Mono',monospace;
     }
+    img { display: block; max-width: 100%; }
     body {
-      margin: 0; background: var(--black); color: var(--white);
-      font-family: 'Space Mono', monospace; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; min-height: 100vh;
+      background: var(--bg); color: var(--text);
+      font-family: var(--sans); display: flex; flex-direction: column;
+      align-items: center; justify-content: center; min-height: 100vh; padding: 7rem 1rem 2rem;
+      -webkit-font-smoothing: antialiased;
     }
     header {
-      position: absolute; top: 0; left: 0; right: 0; padding: 2rem;
+      position: absolute; top: 0; left: 0; right: 0; padding: 1.5rem 2rem;
       display: flex; justify-content: space-between; align-items: center; z-index: 10;
+      border-bottom: 1px solid var(--border); background: rgba(21,28,46,.95); backdrop-filter: blur(12px);
     }
     a.btn-back {
-      color: var(--accent); text-decoration: none; border: 1px solid var(--accent);
-      padding: 0.5rem 1rem; font-size: 0.8rem; text-transform: uppercase;
-      transition: all 0.3s;
+      color: var(--cyan); text-decoration: none; border: 1px solid var(--border2);
+      padding: .5rem 1rem; font-family: var(--mono); font-size: .8rem;
+      text-transform: uppercase; letter-spacing: .1em; transition: all 0.3s;
     }
-    a.btn-back:hover { background: var(--accent); color: var(--black); }
-    h1 { margin: 0; font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.1em; font-size: 2rem; }
-    
+    a.btn-back:hover { background: var(--cyan); color: var(--bg); }
+    h1 {
+      margin: 0; font-family: var(--mono); letter-spacing: .06em;
+      font-size: 1rem; font-weight: 700; color: var(--text); text-transform: uppercase;
+    }
+    .page-wrap {
+      width: min(100%, 980px);
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1.5rem; align-items: start;
+    }
+    /* ── LCD SCREEN ── */
     .screen {
-      background: #000; border: 8px solid #1a1a1a; border-radius: 12px;
-      width: 400px; height: 300px; padding: 2rem;
-      box-shadow: inset 0 0 20px rgba(200,169,110,0.1), 0 20px 50px rgba(0,0,0,0.8);
+      background: #000; border: 6px solid var(--surface); border-radius: 10px;
+      width: 100%; max-width: 440px; height: 300px; padding: 1.5rem;
+      box-shadow: inset 0 0 20px rgba(80,144,240,0.06), 0 20px 50px rgba(0,0,0,0.8);
       position: relative; overflow: hidden;
       display: flex; flex-direction: column; justify-content: space-between;
     }
-    .screen::after { 
+    .screen::after {
       content: ''; position: absolute; top: -50%; left: -50%; right: -50%; bottom: -50%;
-      background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 40%);
+      background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 40%);
       pointer-events: none; transform: rotate(-15deg);
     }
-    
-    .city { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; letter-spacing: 0.1em; color: var(--accent); margin: 0; }
-    .temp { font-size: 4rem; font-weight: bold; margin: 0; line-height: 1; }
-    .desc { font-size: 1rem; color: #888; text-transform: uppercase; letter-spacing: 0.1em; }
-    
-    .bottom-row { display: flex; justify-content: space-between; border-top: 1px solid #333; padding-top: 1rem; margin-top:1rem; }
-    .stat { display: flex; flex-direction: column; gap: 0.2rem; }
-    .stat-val { color: var(--accent); font-size: 1.2rem; }
-    .stat-lbl { color: #666; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; }
-    
+    .city { font-family: var(--mono); font-size: 1.8rem; letter-spacing: 0.06em; color: var(--cyan); margin: 0; line-height: 1; font-weight: 700; }
+    .city-sub { font-size: 0.55rem; color: var(--dim2); letter-spacing: 0.2em; text-transform: uppercase; margin-top: 0.2rem; font-family: var(--mono); }
+    .temp { font-size: 3.5rem; font-weight: 800; margin: 0; line-height: 1; color: var(--text); }
+    .desc { font-size: 0.85rem; color: var(--dim); text-transform: uppercase; letter-spacing: 0.1em; font-family: var(--mono); }
+    .bottom-row { display: flex; justify-content: space-between; border-top: 1px solid #1e2840; padding-top: 1rem; margin-top: 1rem; gap: 1rem; }
+    .stat { display: flex; flex-direction: column; gap: 0.25rem; }
+    .stat-val { color: var(--cyan); font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 0.4rem; font-family: var(--mono); }
+    .stat-lbl { color: var(--dim2); font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase; font-family: var(--mono); }
+    .wind-arrow { display: inline-block; font-size: 1rem; transition: transform 0.8s ease; }
+    /* ── TERMINAL ── */
     .terminal {
-      margin-top: 2rem; width: 440px; font-size: 0.7rem; color: #555; height: 100px; overflow-y: hidden;
-      background: #0a0a0a; padding: 10px; border: 1px solid #222; border-radius: 4px; line-height: 1.4;
+      margin-top: 1.25rem; width: 100%; max-width: 440px; font-size: 0.68rem;
+      color: var(--dim2); height: 100px; overflow-y: hidden;
+      background: #050810; padding: 10px; border: 1px solid var(--border); border-radius: 4px; line-height: 1.5;
+      font-family: var(--mono);
     }
-    .terminal span { color: var(--accent); }
+    .terminal span { color: var(--cyan); }
     .terminal .err { color: #e74c3c; }
     .terminal .succ { color: #2ecc71; }
-
-    .analogy-card {
-      margin-top: 2rem; padding: 1rem; border-radius: 6px; width: 440px;
-      background: linear-gradient(135deg, rgba(200,169,110,.1) 0%, rgba(0,0,0,.5) 100%);
-      border: 1px dashed rgba(200,169,110,.4);
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      text-align: center; height: 140px; position: relative; overflow: hidden;
+    /* ── INFO PANEL ── */
+    .info-panel {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 1.5rem;
     }
-    .analogy-title {
-      font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; color: var(--accent);
-      letter-spacing: .08em; z-index: 2; margin-bottom: .5rem;
+    .info-panel h2 {
+      margin: 0 0 .75rem; font-family: var(--mono);
+      color: var(--cyan); font-size: .9rem; letter-spacing: .1em;
+      text-transform: uppercase; font-weight: 700;
     }
-    .analogy-desc {
-      font-family: 'Space Mono', monospace; font-size: .65rem; color: #aaa;
-      max-width: 90%; z-index: 2;
+    .info-panel p { color: var(--dim); font-size: .88rem; line-height: 1.7; }
+    .desc-section { margin-top: 1rem; }
+    .desc-section h3 {
+      margin: 0 0 .4rem; font-family: var(--mono);
+      color: var(--text); font-size: .75rem; letter-spacing: .1em; text-transform: uppercase;
+    }
+    .tech-tag {
+      display: inline-block; padding: .3rem .7rem; margin: .15rem;
+      border: 1px solid var(--border2); border-radius: 3px; font-size: .65rem;
+      color: var(--cyan); letter-spacing: .08em; font-family: var(--mono);
+      background: rgba(80,144,240,.05);
+    }
+    .analogy-wrap {
+      margin-top: 1rem; border-radius: 6px; overflow: hidden;
+      border: 1px solid var(--border2); background: rgba(80,144,240,.04);
+    }
+    .analogy-header { padding: .8rem 1rem; border-bottom: 1px solid var(--border); }
+    .analogy-header h4 {
+      font-family: var(--mono); font-size: .75rem; color: var(--cyan);
+      letter-spacing: .1em; text-transform: uppercase; margin-bottom: .2rem; font-weight: 700;
+    }
+    .analogy-header p { font-size: .72rem; color: var(--dim); font-family: var(--mono); }
+    .analogy-wrap img { width: 100%; display: block; }
+    @media (max-width: 860px) {
+      header { padding: 1rem; flex-direction: column; gap: .75rem; }
+      .page-wrap { grid-template-columns: 1fr; }
+      .screen, .terminal { max-width: 100%; }
     }
   </style>
 </head>
@@ -81,27 +126,60 @@
   <div style="width: 100px;"></div>
 </header>
 
-<div class="screen" id="weather-screen">
+<div class="page-wrap">
   <div>
-    <h2 class="city" id="w-city">INITIALISATION...</h2>
-    <p class="desc" id="w-desc">DEMANDE DE LOCALISATION GPS</p>
-    <p class="temp" id="w-temp">--°</p>
-  </div>
-  
-  <div class="bottom-row">
-    <div class="stat"><span class="stat-val" id="w-wind">-- km/h</span><span class="stat-lbl">Vent (Vitesse)</span></div>
-    <div class="stat"><span class="stat-val" id="w-wind-dir">--°</span><span class="stat-lbl">Vent (Direction)</span></div>
-  </div>
-</div>
+    <div class="screen" id="weather-screen">
+      <div>
+        <h2 class="city" id="w-city">—</h2>
+        <p class="city-sub" id="w-city-sub">ACQUISITION EN COURS...</p>
+        <p class="desc" id="w-desc">INITIALISATION</p>
+        <p class="temp" id="w-temp">--°</p>
+      </div>
+      
+      <div class="bottom-row">
+        <div class="stat">
+          <span class="stat-val" id="w-wind">-- km/h</span>
+          <span class="stat-lbl">Vitesse du vent</span>
+        </div>
+        <div class="stat">
+          <span class="stat-val"><span class="wind-arrow" id="w-wind-arrow">↑</span><span id="w-wind-dir">--</span></span>
+          <span class="stat-lbl">Direction du vent</span>
+        </div>
+      </div>
+    </div>
 
-<div class="terminal" id="terminal">
-  > SYSTEM BOOT SEQ... OK<br>
-  > REQUESTING BROWSER GEOLOCATION...<br>
-</div>
+    <div class="terminal" id="terminal">
+      > SYSTEM BOOT SEQ... OK<br>
+      > REQUESTING BROWSER GEOLOCATION...<br>
+    </div>
+  </div>
 
-<div class="analogy-card">
-  <div class="analogy-title">🌍 ANALOGIE : SMART CITY & SALLE DE CONTRÔLE</div>
-  <div class="analogy-desc">Interface d'Hypervision urbaine supervisant les capteurs météorologiques globaux avec UI moderne.<br><br><i>[Emplacement libre pour insérer votre photo HD de Dashboard]</i></div>
+  <div class="info-panel">
+    <h2>Architecture de la solution</h2>
+    <p>Développement d'un dashboard de supervision télémétrique en JavaScript asynchrone ("Vanilla JS"). Ce client léger orchestre dynamiquement les protocoles d'acquisition réseau via l'API Open-Meteo et la géolocalisation native du navigateur. Des mécanismes de fallback ont été intégrés pour garantir l'affichage continu (mode dégradé) en cas de défaillance des endpoints.</p>
+    <div class="desc-section">
+      <h3>Compétences démontrées</h3>
+      <p>Intégration d'API REST, maîtrise du routage asynchrone (Promises/Async-Await), gestion active des erreurs de réseau (Timeout, Code HTTP), et restitution optimisée de la donnée brute.</p>
+    </div>
+    <div class="desc-section">
+      <h3>Stack Technologique</h3>
+      <span class="tech-tag">JavaScript ES6</span>
+      <span class="tech-tag">Fetch API</span>
+      <span class="tech-tag">Geolocation API</span>
+      <span class="tech-tag">JSON / REST</span>
+    </div>
+    <div class="desc-section">
+      <h3>Application industrielle</h3>
+      <p>La remontée sécurisée d'informations est le concept fondateur de toute plateforme d'hypervision (salles de contrôle industrielles, SCADA ou tableaux de bord Cloud). Extraire un flot de métriques, filtrer la latence réseau, et modéliser visuellement la data utile est indispensable au monitoring d'infrastructures.</p>
+      <div class="analogy-wrap">
+        <div class="analogy-header">
+          <h4>🌍 ANALOGIE — Salle de contrôle SCADA</h4>
+          <p>Fusion de sources télémétriques pour aide à la décision industrielle en temps réel.</p>
+        </div>
+        <img src="analogie-smartcity.jpg" alt="Interface de supervision SCADA">
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -129,38 +207,56 @@
     return codes[code] || 'Météo Inconnue';
   }
 
+  // Convert degrees to French compass cardinal (16 points)
+  function degToCompass(deg) {
+    const dirs = ['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSO','SO','OSO','O','ONO','NO','NNO'];
+    const idx = Math.round(((deg % 360) + 360) % 360 / 22.5) % 16;
+    return dirs[idx];
+  }
+
   async function fetchRealWeather(lat, lon, cityName) {
-    logTerm(`CONNECTING TO OPEN-METEO API FOR [${lat.toFixed(2)}, ${lon.toFixed(2)}]...`);
+    logTerm(`CONNEXION API [${lat.toFixed(2)}, ${lon.toFixed(2)}]...`);
     
     try {
       const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
-      logTerm(url);
       
       const response = await fetch(url);
-      if(!response.ok) throw new Error('API Error');
+      if(!response.ok) throw new Error('HTTP ' + response.status);
       
       const data = await response.json();
       const current = data.current_weather;
       
-      logTerm(`[HTTP 200] DATA RECEIVED`, 'succ');
-      
+      logTerm(`[HTTP 200] DONNÉES REÇUES`, 'succ');
+      logTerm(`TEMP: ${Math.round(current.temperature)}°C | VENT: ${current.windspeed} km/h | DIR: ${degToCompass(current.winddirection)}`);
+
+      // Update city
       document.getElementById('w-city').textContent = cityName.toUpperCase();
+      document.getElementById('w-city-sub').textContent = `${lat.toFixed(2)}° N, ${Math.abs(lon).toFixed(2)}° ${lon >= 0 ? 'E' : 'O'}`;
+
       document.getElementById('w-desc').textContent = getWeatherDesc(current.weathercode).toUpperCase();
       document.getElementById('w-temp').textContent = Math.round(current.temperature) + '°';
       document.getElementById('w-wind').textContent = current.windspeed + ' km/h';
-      document.getElementById('w-wind-dir').textContent = current.winddirection + '°';
+
+      // Wind direction: compass label + rotating arrow
+      const dir = current.winddirection;
+      const compass = degToCompass(dir);
+      document.getElementById('w-wind-dir').textContent = compass;
+      // Arrow points in the direction the wind is blowing toward (dir = meteorological "from", so flip +180)
+      const arrowDeg = (dir + 180) % 360;
+      document.getElementById('w-wind-arrow').style.transform = `rotate(${arrowDeg}deg)`;
       
     } catch (err) {
-      logTerm('FAILED TO FETCH METEO DATA', 'err');
-      document.getElementById('w-city').textContent = 'ERREUR API';
-      document.getElementById('w-desc').textContent = 'ÉCHEC DE LA CONNEXION';
+      logTerm('ÉCHEC RÉCUPÉRATION DONNÉES: ' + err.message, 'err');
+      document.getElementById('w-city').textContent = 'ERREUR';
+      document.getElementById('w-city-sub').textContent = 'CONNEXION API ÉCHOUÉE';
+      document.getElementById('w-desc').textContent = 'INDISPONIBLE';
     }
   }
 
   // Fallback to Paris
   function fallbackToParis() {
-    logTerm('USING DEFAULT LOCATION: PARIS', 'err');
-    fetchRealWeather(48.8566, 2.3522, 'PARIS (DÉFAUT)');
+    logTerm('LOCALISATION PAR DÉFAUT: PARIS');
+    fetchRealWeather(48.8566, 2.3522, 'PARIS');
   }
 
   // Request Location
@@ -202,7 +298,7 @@
         resolved = true;
         clearTimeout(fallbackTimer);
         
-        logTerm('GEOLOCATION DENIED OR UNAVAILABLE (CODE: '+error.code+')', 'err');
+        logTerm('GÉOLOCALISATION REFUSÉE (CODE: '+error.code+') — FALLBACK ACTIVÉ', 'err');
         fallbackToParis();
       },
       { timeout: 4000 }

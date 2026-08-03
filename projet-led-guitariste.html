@@ -3,145 +3,144 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zouhir OUARAB — Effets Lumineux Guitariste</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<title>Zouhir Ouarab — Effets lumineux embarqués</title>
+<meta name="description" content="Projet de rétro-ingénierie et de reprogrammation d'un bandeau LED sur microcontrôleur avec effets synchronisés à l'audio.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
+  /* ── DESIGN TOKENS (identiques à l'accueil) ── */
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-  :root { --black: #050505; --white: #f5f2ee; --accent: #c8a96e; }
-
-  body {
-    background: var(--black); color: var(--white);
-    font-family: 'Space Mono', monospace; min-height: 100vh;
-    display: flex; flex-direction: column; align-items: center;
+  :root {
+    --bg:#151c2e; --surface:#1e263d; --surface2:#27314d;
+    --border:rgba(80,140,255,.12); --border2:rgba(80,140,255,.25);
+    --text:#e8ecf4; --dim:#8a95aa; --dim2:#4a5570;
+    --cyan:#5090f0; --green:#70b8e8; --accent:#c8a96e;
+    --sans:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',monospace;
   }
-
+  img { display: block; max-width: 100%; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: var(--sans); min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center;
+    -webkit-font-smoothing: antialiased;
+  }
   header {
     width: 100%; padding: 1.5rem 2rem;
     display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid var(--border);
+    background: rgba(21,28,46,.95); backdrop-filter: blur(12px);
+    position: sticky; top: 0; z-index: 50;
   }
   a.btn-back {
-    color: var(--accent); text-decoration: none; border: 1px solid var(--accent);
-    padding: .5rem 1.2rem; font-size: .75rem; text-transform: uppercase;
-    letter-spacing: .12em; transition: .3s;
+    color: var(--cyan); text-decoration: none; border: 1px solid var(--border2);
+    padding: .5rem 1.2rem; font-family: var(--mono); font-size: .75rem;
+    text-transform: uppercase; letter-spacing: .12em; transition: .3s;
   }
-  a.btn-back:hover { background: var(--accent); color: var(--black); }
+  a.btn-back:hover { background: var(--cyan); color: var(--bg); }
   .page-title {
-    font-family: 'Bebas Neue', sans-serif; letter-spacing: .1em;
-    font-size: 1.1rem; color: var(--accent); text-align: center;
+    font-family: var(--mono); letter-spacing: .06em;
+    font-size: .85rem; color: var(--dim); text-align: center; text-transform: uppercase;
   }
-
   .main-wrap {
-    width: 95%; max-width: 900px; padding: 1rem 0 3rem;
-    display: flex; flex-direction: column; align-items: center; gap: 2rem;
+    width: 95%; max-width: 900px; padding: 2rem 0 3rem;
+    display: flex; flex-direction: column; align-items: center; gap: 1.5rem;
   }
-
-  /* ── GUITAR NECK ── */
+  /* ── GUITARE ── */
   .guitar-section {
-    width: 100%; background: #0a0a0a; border: 1px solid #222;
+    width: 100%; background: var(--surface2); border: 1px solid var(--border);
     border-radius: 8px; padding: 2rem; position: relative; overflow: hidden;
   }
   .guitar-section::before {
     content: ''; position: absolute; inset: 0;
-    background: radial-gradient(ellipse at center, rgba(255,255,255,.02) 0%, transparent 70%);
+    background: radial-gradient(ellipse at center, rgba(255,255,255,.015) 0%, transparent 70%);
     pointer-events: none;
   }
   .neck-label {
-    font-size: .55rem; color: rgba(255,255,255,.3); letter-spacing:.15em;
-    text-transform: uppercase; margin-bottom: 1rem;
+    font-size: .55rem; color: var(--dim2); letter-spacing:.15em;
+    text-transform: uppercase; margin-bottom: 1rem; font-family: var(--mono);
   }
-
   .guitar-neck {
     background: linear-gradient(180deg, #1a1208 0%, #2a1c0e 100%);
     border: 1px solid #3a2a1a; border-radius: 4px; padding: 8px 12px;
     display: flex; gap: 3px; justify-content: center; flex-wrap: wrap;
     position: relative; box-shadow: inset 0 0 20px rgba(0,0,0,.6);
   }
-  /* Frets */
   .guitar-neck::before {
     content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 1px;
     background: rgba(200,169,110,.1);
   }
-  /* Strings simulation */
   .strings {
     position: absolute; top: 0; bottom: 0; left: 0; right: 0;
     display: flex; justify-content: space-evenly; pointer-events: none;
   }
-  .string {
-    width: 1px; background: linear-gradient(180deg, rgba(200,200,200,.1), rgba(200,200,200,.05));
-  }
-
+  .string { width: 1px; background: linear-gradient(180deg, rgba(200,200,200,.1), rgba(200,200,200,.05)); }
   .led {
     width: 12px; height: 24px; background: #111; border-radius: 2px;
-    transition: background 0.06s, box-shadow 0.06s;
-    position: relative; z-index: 1;
+    transition: background 0.06s, box-shadow 0.06s; position: relative; z-index: 1;
   }
-
   /* ── CONTROLS ── */
-  .controls {
-    display: flex; gap: .8rem; justify-content: center; flex-wrap: wrap;
-  }
+  .controls { display: flex; gap: .8rem; justify-content: center; flex-wrap: wrap; }
   .mode-btn {
-    background: transparent; border: 1px solid #333; color: #888;
-    padding: .7rem 1.2rem; font-family: 'Space Mono', monospace;
+    background: transparent; border: 1px solid var(--border2); color: var(--dim);
+    padding: .7rem 1.2rem; font-family: var(--mono);
     font-size: .7rem; cursor: pointer; text-transform: uppercase;
     letter-spacing: .1em; transition: .3s; border-radius: 3px;
   }
-  .mode-btn:hover { border-color: var(--accent); color: var(--accent); }
-  .mode-btn.active { background: var(--accent); color: var(--black); border-color: var(--accent); }
-
+  .mode-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+  .mode-btn.active { background: var(--cyan); color: var(--bg); border-color: var(--cyan); }
   /* ── VISUALIZER ── */
   .viz-box {
-    width: 100%; height: 100px; background: #0a0a0a;
-    border: 1px solid #222; border-radius: 6px; overflow: hidden; position: relative;
+    width: 100%; height: 100px; background: var(--surface2);
+    border: 1px solid var(--border); border-radius: 6px; overflow: hidden; position: relative;
   }
   .viz-box canvas { display: block; width: 100%; height: 100%; }
   .viz-label {
     position: absolute; top: 6px; left: 8px;
-    font-size: .5rem; color: rgba(255,255,255,.25); letter-spacing:.12em; text-transform: uppercase;
+    font-size: .5rem; color: var(--dim2); letter-spacing:.12em; text-transform: uppercase;
+    font-family: var(--mono);
   }
-
   .panel {
-    background: rgba(255,255,255,.03); border: 1px solid rgba(200,169,110,.15);
-    border-radius: 8px; padding: 1.5rem; backdrop-filter: blur(8px);
-    width: 100%;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 1.5rem; width: 100%;
   }
   .panel h2 {
-    font-family: 'Bebas Neue', sans-serif; color: var(--accent);
-    font-size: 1.3rem; letter-spacing: .06em; margin-bottom: .6rem;
+    font-family: var(--mono); color: var(--cyan);
+    font-size: .9rem; letter-spacing: .1em; margin-bottom: .6rem;
+    text-transform: uppercase; font-weight: 700;
   }
-  .panel p { color: #999; font-size: .82rem; line-height: 1.6; }
-
+  .panel p { color: var(--dim); font-size: .88rem; line-height: 1.7; }
   .tech-tag {
-    display: inline-block; padding: .25rem .6rem; margin: .15rem;
-    border: 1px solid #333; border-radius: 3px; font-size: .6rem;
-    color: var(--accent); letter-spacing: .08em;
+    display: inline-block; padding: .3rem .7rem; margin: .2rem;
+    border: 1px solid var(--border2); border-radius: 3px; font-size: .65rem;
+    color: var(--cyan); letter-spacing: .08em; font-family: var(--mono);
+    background: rgba(80,144,240,.05);
   }
   .desc-section { margin-top: 1rem; }
   .desc-section h3 {
-    font-family: 'Bebas Neue', sans-serif; font-size: 1rem;
-    color: var(--white); letter-spacing: .06em; margin-bottom: .4rem;
+    font-family: var(--mono); font-size: .75rem;
+    color: var(--text); letter-spacing: .1em; margin-bottom: .4rem; text-transform: uppercase;
   }
-
   .music-info {
-    text-align: center; font-size: .7rem; color: #555; margin-top: .5rem;
-    letter-spacing: .1em;
+    text-align: center; font-size: .7rem; color: var(--dim2); margin-top: .5rem;
+    letter-spacing: .1em; font-family: var(--mono);
   }
-  .music-info span { color: var(--accent); }
-
-  .analogy-card {
-    margin-top: 1rem; padding: 1rem; border-radius: 6px;
-    background: linear-gradient(135deg, rgba(200,169,110,.1) 0%, rgba(0,0,0,.5) 100%);
-    border: 1px dashed rgba(200,169,110,.4);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    text-align: center; height: 140px; position: relative; overflow: hidden;
+  .music-info span { color: var(--cyan); }
+  .analogy-wrap {
+    margin-top: 1rem; border-radius: 6px; overflow: hidden;
+    border: 1px solid var(--border2); background: rgba(80,144,240,.04);
   }
-  .analogy-title {
-    font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; color: var(--accent);
-    letter-spacing: .08em; z-index: 2; margin-bottom: .5rem;
+  .analogy-header { padding: .8rem 1rem; border-bottom: 1px solid var(--border); }
+  .analogy-header h4 {
+    font-family: var(--mono); font-size: .75rem; color: var(--cyan);
+    letter-spacing: .1em; text-transform: uppercase; margin-bottom: .2rem; font-weight: 700;
   }
-  .analogy-desc {
-    font-family: 'Space Mono', monospace; font-size: .65rem; color: #aaa;
-    max-width: 90%; z-index: 2;
+  .analogy-header p { font-size: .72rem; color: var(--dim); font-family: var(--mono); }
+  .analogy-wrap img { width: 100%; display: block; }
+  @media (max-width: 700px) {
+    header { padding: 1rem; flex-direction: column; gap: .8rem; }
+    .page-title { font-size: .75rem; }
+    .main-wrap { width: 100%; padding: 0 1rem 2rem; }
+    .guitar-section, .panel { padding: 1.2rem; }
   }
 </style>
 </head>
@@ -149,7 +148,7 @@
 
 <header>
   <a href="index.html" class="btn-back">← Retour au CV</a>
-  <span class="page-title">EFFETS LUMINEUX — MICROCONTRÔLEUR / LED WS2812B</span>
+  <span class="page-title">CONTRÔLEUR LUMINEUX ADAPTATIF — MICROCONTRÔLEUR / WS2812B</span>
   <div style="width:120px"></div>
 </header>
 
@@ -171,7 +170,7 @@
     <span class="viz-label">Analyse Fréquentielle (Simulée)</span>
     <canvas id="vizCanvas" width="900" height="100"></canvas>
   </div>
-  <div class="music-info">🎵 <span id="track-name">Initialisation audio...</span></div>
+  <div class="music-info">🎵 <span id="track-name">Cliquez pour lancer l'analyse audio</span></div>
 
   <!-- MODE BUTTONS -->
   <div class="controls">
@@ -184,25 +183,31 @@
 
   <!-- DETAILS -->
   <div class="panel">
-    <h2>Détails du Projet</h2>
-    <p>Rétro-ingénierie d'un bandeau LED commercial et reprogrammation complète en C sur microcontrôleur. Le système offre 5+ modes d'éclairage synchronisés avec l'analyse audio en temps réel.</p>
+    <h2>Description du projet</h2>
+    <p>Rétro-ingénierie d'un bandeau à LED commerciales adressables (WS2812B) afin de se substituer au contrôleur d'origine. L'objectif est l'implémentation d'un firmware personnalisé en C embarqué, permettant une orchestration lumineuse complexe synchronisée par transformée de Fourier rapide (FFT) d'un flux audio.</p>
     <div class="desc-section">
-      <h3>Technologies</h3>
+      <h3>Compétences démontrées</h3>
+      <p>Méthodologie de Reverse Engineering sur système matériel existant, maîtrise des protocoles d'adressage de périphériques, programmation C bas niveau, et algorithmes de traitement numérique du signal (DSP).</p>
+    </div>
+    <div class="desc-section">
+      <h3>Stack Technologique</h3>
       <span class="tech-tag">ATmega328P</span>
-      <span class="tech-tag">C / AVR</span>
-      <span class="tech-tag">WS2812B</span>
-      <span class="tech-tag">FFT Audio</span>
-      <span class="tech-tag">PWM</span>
-      <span class="tech-tag">SPI</span>
+      <span class="tech-tag">C (AVR-GCC)</span>
+      <span class="tech-tag">LEDs WS2812B</span>
+      <span class="tech-tag">Transformée FFT</span>
+      <span class="tech-tag">Signaux PWM / SPI</span>
+      <span class="tech-tag">Analyse DSP</span>
     </div>
     <div class="desc-section" style="margin-top:1rem;">
-      <h3>Utilité dans la vie réelle</h3>
-      <p>Les bandeaux LED programmables sont omniprésents : concerts et spectacles vivants, éclairage architectural, signalisation automobile, décoration intérieure intelligente. Ce projet démontre la maîtrise de la communication série rapide et du traitement de signal en temps réel sur systèmes contraints.</p>
+      <h3>Application industrielle</h3>
+      <p>La compréhension analytique d'un circuit propriétaire et la redéfinition de son comportement logiciel sont des compétences décisives en ingénierie de débogage, lors de la pérennisation de systèmes hérités ou dans le cadre de l'intégration de sous-systèmes embarqués scénographiques.</p>
 
-      <div class="analogy-card" style="padding:0; border:none; background:transparent; height:auto;">
-        <h4 style="font-family:'Bebas Neue',sans-serif; color:var(--accent); font-size:1.1rem; margin-bottom:0.5rem; letter-spacing:0.08em; text-align:center;">🎸 ANALOGIE : ÉCLAIRAGE SCÉNIQUE DMX</h4>
-        <p style="font-size:0.75rem; color:#aaa; text-align:center; margin-bottom:1rem;">Concert et Régie Lumière</p>
-        <img src="analogie-dmx.jpg" alt="DMX Concert Stage Lighting" style="width:100%; border-radius:6px; border:1px solid #333;">
+      <div class="analogy-wrap">
+        <div class="analogy-header">
+          <h4>💡 ANALOGIE — Éclairage scénique DMX</h4>
+          <p>Logique DSP temps réel comparable aux pupitres de commande lumière professionnels.</p>
+        </div>
+        <img src="analogie-dmx.jpg" alt="DMX Concert Stage Lighting">
       </div>
     </div>
   </div>
@@ -327,7 +332,7 @@ async function initAudio() {
   }
 
   createBeat();
-  document.getElementById('track-name').textContent = 'Synthétiseur Dynamique — 120 BPM';
+  document.getElementById('track-name').textContent = 'Synthétiseur dynamique — 120 BPM';
 }
 
 // Start audio on first user interaction
