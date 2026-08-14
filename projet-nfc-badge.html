@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Zouhir Ouarab — Interface RFID/NFC</title>
   <meta name="description" content="Développement d'une IHM Android pour lire et dupliquer des badges NFC avec gestion asynchrone du matériel.">
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📱</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -12,35 +14,52 @@
     /* ── DESIGN TOKENS ── */
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --bg:#111111; --surface:#1a1a1a; --surface2:#262626;
-      --border:#333333; --border2:#404040;
-      --text:#f5f5f5; --dim:#a3a3a3; --dim2:#737373;
-      --cyan:#d4d4d8; --green:#a3a3a3; --accent:#737373;
+      --bg:#0d121f; --surface:#141c2e; --surface2:#1b263e;
+      --border:rgba(99,140,245,.16); --border2:rgba(99,140,245,.32);
+      --text:#f1f5f9; --dim:#94a3b8; --dim2:#64748b;
+      --cyan:#38bdf8; --green:#34d399; --accent:#f59e0b;
       --sans:'Inter',system-ui,sans-serif;
-      --mono:'Inter',system-ui,sans-serif;
+      --mono:'JetBrains Mono',monospace;
     }
     img { display: block; max-width: 100%; }
     body {
       background: var(--bg); color: var(--text);
       font-family: var(--sans); display: flex; flex-direction: column;
-      align-items: center; justify-content: center; min-height: 100vh; padding: 7rem 1rem 2rem;
+      align-items: center; justify-content: center; min-height: 100vh; padding: 6rem 1rem 2rem;
       -webkit-font-smoothing: antialiased;
     }
     header {
-      position: absolute; top: 0; left: 0; right: 0; padding: 1.5rem 2rem;
+      position: absolute; top: 0; left: 0; right: 0; padding: 1.2rem 2rem;
       display: flex; justify-content: space-between; align-items: center; z-index: 10;
-      border-bottom: 1px solid var(--border); background: rgba(21,28,46,.95); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border); background: rgba(13,18,31,.92); backdrop-filter: blur(16px);
     }
     a.btn-back {
       color: var(--cyan); text-decoration: none; border: 1px solid var(--border2);
-      padding: .5rem 1rem; font-family: var(--mono); font-size: .8rem;
+      padding: .5rem 1.1rem; font-family: var(--mono); font-size: .75rem;
       text-transform: uppercase; letter-spacing: .1em; transition: all 0.3s;
+      border-radius: 6px; display: inline-flex; align-items: center; gap: 0.4rem;
     }
-    a.btn-back:hover { background: var(--cyan); color: var(--bg); }
+    a.btn-back:hover { background: var(--cyan); color: #0d121f; font-weight: 700; }
     h1 {
       margin: 0; font-family: var(--mono); letter-spacing: .06em;
-      font-size: 1rem; font-weight: 700; color: var(--text); text-transform: uppercase;
+      font-size: 0.95rem; font-weight: 700; color: var(--text); text-transform: uppercase;
     }
+    .project-nav {
+      width: min(100%, 980px); margin: 2rem 0 1rem;
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 1rem; flex-wrap: wrap; padding-top: 1.5rem; border-top: 1px solid var(--border);
+    }
+    .pnav-link {
+      font-family: var(--mono); font-size: 0.78rem; text-transform: uppercase;
+      letter-spacing: 0.08em; padding: 0.75rem 1.3rem; border: 1px solid var(--border2);
+      border-radius: 6px; background: var(--surface); color: var(--text);
+      transition: all 0.25s; display: inline-flex; align-items: center; gap: 0.5rem;
+    }
+    .pnav-link:hover {
+      background: var(--cyan); color: #0d121f; border-color: var(--cyan);
+      font-weight: 700; transform: translateY(-2px);
+    }
+    .pnav-home { color: var(--dim); border-color: var(--border); }
     .page-wrap {
       width: min(100%, 980px);
       display: grid; grid-template-columns: 1fr 1fr;
@@ -195,6 +214,12 @@
       </div>
     </div>
   </div>
+</div>
+
+<div class="project-nav">
+  <a href="projet-vehicule-autonome.html" class="pnav-link pnav-prev">← 01. Véhicule Autonome</a>
+  <a href="index.html#projects" class="pnav-link pnav-home">🏠 Tous les démonstrateurs</a>
+  <a href="projet-dehazing.html" class="pnav-link pnav-next">03. Désembuage Images →</a>
 </div>
 
 <script>

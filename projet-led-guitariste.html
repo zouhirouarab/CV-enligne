@@ -5,15 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Zouhir Ouarab — Effets lumineux embarqués</title>
 <meta name="description" content="Projet de rétro-ingénierie et de reprogrammation d'un bandeau LED sur microcontrôleur avec effets synchronisés à l'audio.">
+<!-- Favicon -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎸</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-  /* ── DESIGN TOKENS (identiques à l'accueil) ── */
+  /* ── DESIGN TOKENS ── */
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
-    --bg:#151c2e; --surface:#1e263d; --surface2:#27314d;
-    --border:rgba(80,140,255,.12); --border2:rgba(80,140,255,.25);
-    --text:#e8ecf4; --dim:#8a95aa; --dim2:#4a5570;
-    --cyan:#5090f0; --green:#70b8e8; --accent:#c8a96e;
+    --bg:#0d121f; --surface:#141c2e; --surface2:#1b263e;
+    --border:rgba(99,140,245,.16); --border2:rgba(99,140,245,.32);
+    --text:#f1f5f9; --dim:#94a3b8; --dim2:#64748b;
+    --cyan:#38bdf8; --green:#34d399; --accent:#f59e0b;
     --sans:'Inter',system-ui,sans-serif;
     --mono:'JetBrains Mono',monospace;
   }
@@ -25,22 +27,39 @@
     -webkit-font-smoothing: antialiased;
   }
   header {
-    width: 100%; padding: 1.5rem 2rem;
+    width: 100%; padding: 1.2rem 2rem;
     display: flex; justify-content: space-between; align-items: center;
     border-bottom: 1px solid var(--border);
-    background: rgba(21,28,46,.95); backdrop-filter: blur(12px);
+    background: rgba(13,18,31,.92); backdrop-filter: blur(16px);
     position: sticky; top: 0; z-index: 50;
   }
   a.btn-back {
     color: var(--cyan); text-decoration: none; border: 1px solid var(--border2);
-    padding: .5rem 1.2rem; font-family: var(--mono); font-size: .75rem;
+    padding: .5rem 1.1rem; font-family: var(--mono); font-size: .75rem;
     text-transform: uppercase; letter-spacing: .12em; transition: .3s;
+    border-radius: 6px; display: inline-flex; align-items: center; gap: 0.4rem;
   }
-  a.btn-back:hover { background: var(--cyan); color: var(--bg); }
+  a.btn-back:hover { background: var(--cyan); color: #0d121f; font-weight: 700; }
   .page-title {
     font-family: var(--mono); letter-spacing: .06em;
     font-size: .85rem; color: var(--dim); text-align: center; text-transform: uppercase;
   }
+  .project-nav {
+    width: 95%; max-width: 900px; margin: 1.5rem 0 3.5rem;
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 1rem; flex-wrap: wrap; padding-top: 1.5rem; border-top: 1px solid var(--border);
+  }
+  .pnav-link {
+    font-family: var(--mono); font-size: 0.78rem; text-transform: uppercase;
+    letter-spacing: 0.08em; padding: 0.75rem 1.3rem; border: 1px solid var(--border2);
+    border-radius: 6px; background: var(--surface); color: var(--text);
+    transition: all 0.25s; display: inline-flex; align-items: center; gap: 0.5rem;
+  }
+  .pnav-link:hover {
+    background: var(--cyan); color: #0d121f; border-color: var(--cyan);
+    font-weight: 700; transform: translateY(-2px);
+  }
+  .pnav-home { color: var(--dim); border-color: var(--border); }
   .main-wrap {
     width: 95%; max-width: 900px; padding: 2rem 0 3rem;
     display: flex; flex-direction: column; align-items: center; gap: 1.5rem;
@@ -212,6 +231,12 @@
     </div>
   </div>
 
+</div>
+
+<div class="project-nav">
+  <a href="projet-pid-trajectoire.html" class="pnav-link pnav-prev">← 04. Asservissement PID</a>
+  <a href="index.html#projects" class="pnav-link pnav-home">🏠 Tous les démonstrateurs</a>
+  <a href="projet-meteo-api.html" class="pnav-link pnav-next">06. Interface Météo →</a>
 </div>
 
 <script>
