@@ -9,24 +9,19 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌤️</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
   <style>
     /* ── DESIGN TOKENS ── */
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-<<<<<<< HEAD
-      --bg:#0d121f; --surface:#141c2e; --surface2:#1b263e;
-      --border:rgba(99,140,245,.16); --border2:rgba(99,140,245,.32);
+      --bg: #121316; --surface: #191a1f; --surface2: #22242b;
+      --border: rgba(255, 255, 255, 0.08); --border2: rgba(255, 255, 255, 0.16);
       --text:#f1f5f9; --dim:#94a3b8; --dim2:#64748b;
-      --cyan:#38bdf8; --green:#34d399; --accent:#f59e0b;
-=======
-      --bg:#33363a; --surface:#42454a; --surface2:#51555b;
-      --border:#5f646b; --border2:#70767e;
-      --text:#ffffff; --dim:#d1d5db; --dim2:#9ca3af;
-      --cyan:#ffffff; --green:#e5e7eb; --accent:#d1d5db;
->>>>>>> 5422078a87c2f8fb182d4d51ee4809206ef714f8
-      --sans:'Inter',system-ui,sans-serif;
-      --mono:'JetBrains Mono',monospace;
+      --cyan: #f4f5f7; --green: #9ca3af; --accent:#f59e0b;
+      --sans: 'Inter', -apple-system, sans-serif;
+      --mono: 'Inter', -apple-system, sans-serif;
     }
     img { display: block; max-width: 100%; }
     body {
@@ -38,7 +33,7 @@
     header {
       position: absolute; top: 0; left: 0; right: 0; padding: 1.2rem 2rem;
       display: flex; justify-content: space-between; align-items: center; z-index: 10;
-      border-bottom: 1px solid var(--border); background: rgba(13,18,31,.92); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border); background: rgba(18, 19, 22, 0.92); backdrop-filter: blur(16px);
     }
     a.btn-back {
       color: var(--cyan); text-decoration: none; border: 1px solid var(--border2);
@@ -46,7 +41,7 @@
       text-transform: uppercase; letter-spacing: .1em; transition: all 0.3s;
       border-radius: 6px; display: inline-flex; align-items: center; gap: 0.4rem;
     }
-    a.btn-back:hover { background: var(--cyan); color: #0d121f; font-weight: 700; }
+    a.btn-back:hover { background: var(--text); color: var(--bg); font-weight: 700; }
     h1 {
       margin: 0; font-family: var(--mono); letter-spacing: .06em;
       font-size: 0.95rem; font-weight: 700; color: var(--text); text-transform: uppercase;
@@ -63,7 +58,7 @@
       transition: all 0.25s; display: inline-flex; align-items: center; gap: 0.5rem;
     }
     .pnav-link:hover {
-      background: var(--cyan); color: #0d121f; border-color: var(--cyan);
+      background: var(--text); color: var(--bg); border-color: var(--cyan);
       font-weight: 700; transform: translateY(-2px);
     }
     .pnav-home { color: var(--dim); border-color: var(--border); }
@@ -147,7 +142,7 @@
 <body>
 
 <header>
-  <a href="index.html" class="btn-back">← Retour au CV</a>
+  <a href="../index.html" class="btn-back">← Retour au CV</a>
   <h1>DASHBOARD MÉTÉO (API TEMPS RÉEL)</h1>
   <div style="width: 100px;"></div>
 </header>
@@ -202,7 +197,7 @@
           <h4>🌍 ANALOGIE — Salle de contrôle SCADA</h4>
           <p>Fusion de sources télémétriques pour aide à la décision industrielle en temps réel.</p>
         </div>
-        <img src="analogie-smartcity.jpg" alt="Interface de supervision SCADA">
+        <img src="../assets/images/analogie-smartcity.jpg" alt="Interface de supervision SCADA">
       </div>
     </div>
   </div>
@@ -210,7 +205,7 @@
 
 <div class="project-nav">
   <a href="projet-led-guitariste.html" class="pnav-link pnav-prev">← 05. Dispositif Lumineux</a>
-  <a href="index.html#projects" class="pnav-link pnav-home">🏠 Tous les démonstrateurs</a>
+  <a href="../index.html#projects" class="pnav-link pnav-home">🏠 Tous les démonstrateurs</a>
   <a href="projet-vehicule-autonome.html" class="pnav-link pnav-next">01. Véhicule Autonome →</a>
 </div>
 

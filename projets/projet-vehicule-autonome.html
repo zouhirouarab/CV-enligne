@@ -7,18 +7,20 @@
 <meta name="description" content="Projet de véhicule autonome miniature : fusion caméra + LiDAR, évitement d'obstacles et télémétrie temps réel sur Raspberry Pi.">
 <!-- Favicon -->
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚗</text></svg>">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
   /* ── DESIGN TOKENS ── */
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
-    --bg:#0d121f; --surface:#141c2e; --surface2:#1b263e;
-    --border:rgba(99,140,245,.16); --border2:rgba(99,140,245,.32);
+    --bg: #121316; --surface: #191a1f; --surface2: #22242b;
+    --border: rgba(255, 255, 255, 0.08); --border2: rgba(255, 255, 255, 0.16);
     --text:#f1f5f9; --dim:#94a3b8; --dim2:#64748b;
-    --cyan:#38bdf8; --green:#34d399; --accent:#f59e0b;
+    --cyan: #f4f5f7; --green: #9ca3af; --accent:#f59e0b;
     --danger:#ef4444; --safe:#10b981; --warn:#f59e0b;
-    --sans:'Inter',system-ui,sans-serif;
-    --mono:'JetBrains Mono',monospace;
+    --sans: 'Inter', -apple-system, sans-serif;
+    --mono: 'Inter', -apple-system, sans-serif;
   }
   img { display: block; max-width: 100%; }
   body {
@@ -31,7 +33,7 @@
     width: 100%; padding: 1.2rem 2rem;
     display: flex; justify-content: space-between; align-items: center;
     border-bottom: 1px solid var(--border);
-    background: rgba(13,18,31,.92); backdrop-filter: blur(16px);
+    background: rgba(18, 19, 22, 0.92); backdrop-filter: blur(16px);
     position: sticky; top: 0; z-index: 50;
   }
   a.btn-back {
@@ -40,7 +42,7 @@
     text-transform: uppercase; letter-spacing: .12em; transition: .3s;
     border-radius: 6px; display: inline-flex; align-items: center; gap: 0.4rem;
   }
-  a.btn-back:hover { background: var(--cyan); color: var(--bg); font-weight: 700; }
+  a.btn-back:hover { background: var(--text); color: var(--bg); font-weight: 700; }
   .page-title {
     font-family: var(--mono); letter-spacing: .06em;
     font-size: .85rem; color: var(--dim); text-align: center; text-transform: uppercase;
@@ -57,7 +59,7 @@
     transition: all 0.25s; display: inline-flex; align-items: center; gap: 0.5rem;
   }
   .pnav-link:hover {
-    background: var(--cyan); color: #0d121f; border-color: var(--cyan);
+    background: var(--text); color: var(--bg); border-color: var(--cyan);
     font-weight: 700; transform: translateY(-2px);
   }
   .pnav-home { color: var(--dim); border-color: var(--border); }
@@ -153,7 +155,7 @@
 <body>
 
 <header>
-  <a href="index.html" class="btn-back">← Retour au CV</a>
+  <a href="../index.html" class="btn-back">← Retour au CV</a>
   <span class="page-title">PERCEPTION AUTONOME — RASPBERRY PI / LIDAR / OPENCV</span>
   <div style="width:120px"></div>
 </header>
@@ -206,7 +208,7 @@
             <h4>🚗 ANALOGIE — Perception ADAS urbaine</h4>
             <p>Détection d'objets et décision temps réel sur véhicule autonome — même chaîne d'inférence.</p>
           </div>
-          <img src="auto_detec.png" alt="Détection d'objets YOLO sur véhicule autonome urbain">
+          <img src="../assets/images/auto_detec.png" alt="Détection d'objets YOLO sur véhicule autonome urbain">
         </div>
       </div>
     </div>
@@ -216,7 +218,7 @@
 
 <div class="project-nav">
   <a href="projet-meteo-api.html" class="pnav-link pnav-prev">← 06. Interface Météo</a>
-  <a href="index.html#projects" class="pnav-link pnav-home">🏠 Tous les démonstrateurs</a>
+  <a href="../index.html#projects" class="pnav-link pnav-home">🏠 Tous les démonstrateurs</a>
   <a href="projet-nfc-badge.html" class="pnav-link pnav-next">02. Interface NFC →</a>
 </div>
 
